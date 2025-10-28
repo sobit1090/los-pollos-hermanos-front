@@ -1,0 +1,227 @@
+@import "colors";
+
+.footer-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 0.5rem 1rem;
+
+  .footer-container {
+    max-width: 500px;
+    margin: 0 auto;
+    height: 100%;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    gap: 0.5rem;
+
+    .nav-item {
+      flex: 1;
+      height: 100%;
+      position: relative;
+
+      .nav-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-decoration: none;
+        color: $darklight;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 0.5rem;
+
+        &:hover {
+          color: $red;
+          background: rgba($red, 0.05);
+        }
+
+        .nav-icon {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 0.25rem;
+          
+          svg {
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+          }
+
+          .nav-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: linear-gradient(135deg, $red, $reddark);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+          }
+        }
+
+        .nav-label {
+          font-size: 0.7rem;
+          font-weight: 500;
+          transition: all 0.3s ease;
+        }
+      }
+
+      &.active {
+        .nav-link {
+          color: $red;
+
+          .nav-icon {
+            svg {
+              transform: translateY(-2px);
+            }
+          }
+
+          .nav-label {
+            font-weight: 600;
+            color: $red;
+          }
+        }
+
+        .active-indicator {
+          position: absolute;
+          bottom: 4px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 4px;
+          height: 4px;
+          background: $red;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  // Subtle glow effect for active state
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba($red, 0.1), transparent);
+  }
+}
+
+// Add padding to body to account for fixed footer
+body {
+  padding-bottom: 80px;
+
+  @media (max-width: 480px) {
+    padding-bottom: 70px;
+  }
+}
+
+// Hide footer on desktop
+@media screen and (min-width: 769px) {
+  .footer-nav {
+    display: none;
+  }
+
+  body {
+    padding-bottom: 0;
+  }
+}
+
+// Mobile optimizations
+@media screen and (max-width: 480px) {
+  .footer-nav {
+    height: 70px;
+    padding: 0.5rem;
+
+    .footer-links {
+      .nav-item {
+        .nav-link {
+          padding: 0.4rem;
+
+          .nav-icon {
+            svg {
+              font-size: 1.3rem;
+            }
+
+            .nav-badge {
+              width: 16px;
+              height: 16px;
+              font-size: 0.55rem;
+              top: -5px;
+              right: -5px;
+            }
+          }
+
+          .nav-label {
+            font-size: 0.65rem;
+          }
+        }
+
+        &.active {
+          .active-indicator {
+            width: 3px;
+            height: 3px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Very small screens
+@media screen and (max-width: 360px) {
+  .footer-nav {
+    height: 65px;
+
+    .footer-links {
+      .nav-item {
+        .nav-link {
+          .nav-label {
+            font-size: 0.6rem;
+          }
+
+          .nav-icon {
+            svg {
+              font-size: 1.2rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Safe area support for notched devices
+@supports (padding: max(0px)) {
+  .footer-nav {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+  
+  body {
+    padding-bottom: max(80px, env(safe-area-inset-bottom));
+    
+    @media (max-width: 480px) {
+      padding-bottom: max(70px, env(safe-area-inset-bottom));
+    }
+  }
+}

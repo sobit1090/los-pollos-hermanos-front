@@ -1,0 +1,177 @@
+@import "colors";
+
+.menu {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
+
+  .menu-header {
+    text-align: center;
+    margin-bottom: 4rem;
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: $dark;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, $dark, lighten($dark, 20%));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: $darklight;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 4rem;
+  }
+
+  .menu-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+
+    .popular-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: linear-gradient(135deg, #ffc107, #ffd54f);
+      color: #212529;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 2;
+    }
+
+    .card-image {
+      height: 250px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+    }
+
+    &:hover .card-image img {
+      transform: scale(1.05);
+    }
+
+    .card-content {
+      padding: 1.5rem;
+
+      h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: $dark;
+        margin-bottom: 0.5rem;
+      }
+
+      .card-description {
+        color: $darklight;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .price {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: $red;
+        }
+
+        .add-to-cart-btn {
+          background: linear-gradient(135deg, $red, $reddark);
+          color: white;
+          border: none;
+          padding: 0.75rem 1.5rem;
+          border-radius: 10px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: linear-gradient(135deg, $reddark, darken($reddark, 10%));
+          }
+        }
+      }
+    }
+  }
+
+  .menu-cta {
+    text-align: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+
+    p {
+      font-size: 1.1rem;
+      color: $dark;
+      margin-bottom: 1.5rem;
+
+      strong {
+        color: $red;
+      }
+    }
+
+    .cta-secondary {
+      background: transparent;
+      color: $dark;
+      border: 2px solid $dark;
+      padding: 0.75rem 2rem;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: $dark;
+        color: white;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .menu {
+    padding: 2rem 1rem;
+
+    .menu-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .menu-card {
+      .card-content {
+        padding: 1.25rem;
+      }
+    }
+  }
+}
