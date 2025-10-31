@@ -11,6 +11,8 @@ import {
   MdEmail
 } from "react-icons/md";
 import { FiUser, FiShoppingCart, FiLogOut } from "react-icons/fi";
+import { useDispatch } from "react-redux";
+import {logout} from "../../redux/actions/user"
 
 const Profile = () => {
   useEffect(() => {
@@ -49,7 +51,10 @@ const Profile = () => {
     orders: 12,
     role: "Admin"
   };
-
+  const dispatch=useDispatch();
+ const logoutHandler=()=>{
+    dispatch(logout())
+ }
   return (
     <section className="profile">
       <motion.main
@@ -145,6 +150,7 @@ const Profile = () => {
           <h2>Account Management</h2>
           <div className="account-actions">
             <motion.button 
+            onClick={logoutHandler}
               className="btn-logout"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

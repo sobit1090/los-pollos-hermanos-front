@@ -1,7 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { server } from "../../redux/store";
 const LoginForm = () => {
  const navigate = useNavigate();
+ const loginHandler = ()=>{
+  window.open(`${server}/googlelogin`,"_self")
+ }
   return (
     <div className="form-box_1 login_1">
       <form>
@@ -28,7 +32,7 @@ const LoginForm = () => {
         <p>or login with social platforms</p>
 
         <div className="social-icons_1">
-          <a href="http://localhost:8080/api/v1/login/"><i className="bx bxl-google"></i></a>
+          <a onClick={loginHandler}><i className="bx bxl-google"></i></a>
           <a href="#"> <i className="bx bx-phone"></i></a>
           <a href="#"><i className="bx bxl-github"></i></a>
           <a href="#"><i className="bx bxl-linkedin"></i></a>

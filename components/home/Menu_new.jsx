@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+
 import { 
   FiSearch, 
   FiFilter, 
@@ -232,7 +234,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("popular");
-  const [cart, setCart] = useState([]);
+ 
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     vegetarian: false,
@@ -268,23 +270,9 @@ const Menu = () => {
       }
     });
 
-  const addToCart = (item) => {
-    setCart(prev => {
-      const existing = prev.find(cartItem => cartItem.id === item.id);
-      if (existing) {
-        return prev.map(cartItem =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        );
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
-  };
+ 
 
-  const getCartCount = () => {
-    return cart.reduce((total, item) => total + item.quantity, 0);
-  };
+ 
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -308,6 +296,22 @@ const Menu = () => {
     }
   };
 
+  const dispatch = useDispatch();
+const { cartItems } = useSelector((state) => state.cart);
+
+const addToCart = (item) => {
+  if (item.name.includes("Cheese Burger with French Fries")) {
+    dispatch({ type: "burgerWithFriesIncrement" });
+  } else if (item.name.includes("Veg Cheese")) {
+    dispatch({ type: "vegCheeseBurgerIncrement" });
+  } else if (item.name.includes("Cheese Burger")) {
+    dispatch({ type: "cheeseBurgerIncrement" });
+  }
+
+  dispatch({ type: "calculatePrice" });
+};
+
+
   return (
     <section className="menu-page">
       {/* Header */}
@@ -321,12 +325,7 @@ const Menu = () => {
           <h1>Our Delicious Menu</h1>
           <p>Handcrafted burgers made with love and the finest ingredients</p>
         </div>
-        <div className="cart-indicator">
-          <FiShoppingCart />
-          {getCartCount() > 0 && (
-            <span className="cart-count">{getCartCount()}</span>
-          )}
-        </div>
+      
       </motion.div>
 
       {/* Search and Filters */}
