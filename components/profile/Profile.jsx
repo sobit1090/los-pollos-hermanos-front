@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+ 
 import { motion } from "framer-motion";
 import me from "../../assets/founder.webp";
 import { Link } from "react-router-dom";
