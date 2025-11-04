@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-
-import { 
-  FiSearch, 
-  FiFilter, 
-  FiStar, 
+import { toast } from "react-hot-toast";
+import {
+  FiSearch,
+  FiFilter,
+  FiStar,
   FiClock,
-  FiHeart,
   FiShoppingCart,
-  FiChevronDown,
-  FiZap
+  FiZap,
 } from "react-icons/fi";
 
-// Sample menu data
+// ✅ Full menu data (unchanged)
 const menuData = {
   categories: [
     { id: "all", name: "All Items", icon: "🍔" },
@@ -22,14 +20,15 @@ const menuData = {
     { id: "veg", name: "Vegetarian", icon: "🥬" },
     { id: "combo", name: "Combos", icon: "🎯" },
     { id: "sides", name: "Sides", icon: "🍟" },
-    { id: "beverages", name: "Beverages", icon: "🥤" }
+    { id: "beverages", name: "Beverages", icon: "🥤" },
   ],
   items: [
     // Signature Burgers
     {
       id: 1,
       name: "The Classic Supreme",
-      description: "Our signature beef patty with aged cheddar, crispy bacon, fresh lettuce, tomato, and special sauce",
+      description:
+        "Our signature beef patty with aged cheddar, crispy bacon, fresh lettuce, tomato, and special sauce",
       price: 399,
       category: "signature",
       image: "../../assets/burger1.png",
@@ -38,26 +37,28 @@ const menuData = {
       vegetarian: false,
       preparationTime: 15,
       rating: 4.8,
-      calories: 650
+      calories: 650,
     },
     {
       id: 2,
       name: "Double Trouble Burger",
-      description: "Double beef patties, double cheese, caramelized onions, and smoky BBQ sauce",
+      description:
+        "Double beef patties, double cheese, caramelized onions, and smoky BBQ sauce",
       price: 499,
       category: "signature",
-     image: "../../assets/burger1.png",
+      image: "../../assets/burger1.png",
       popular: true,
       spicy: false,
       vegetarian: false,
       preparationTime: 18,
       rating: 4.9,
-      calories: 850
+      calories: 850,
     },
     {
       id: 3,
       name: "Spicy Dragon Burger",
-      description: "Spicy chicken patty with jalapeños, pepper jack cheese, and dragon sauce",
+      description:
+        "Spicy chicken patty with jalapeños, pepper jack cheese, and dragon sauce",
       price: 349,
       category: "chicken",
       image: "../../assets/burger1.png",
@@ -66,21 +67,22 @@ const menuData = {
       vegetarian: false,
       preparationTime: 12,
       rating: 4.7,
-      calories: 580
+      calories: 580,
     },
     {
       id: 4,
       name: "Mushroom Swiss Bliss",
-      description: "Beef patty with sautéed mushrooms, Swiss cheese, and garlic aioli",
+      description:
+        "Beef patty with sautéed mushrooms, Swiss cheese, and garlic aioli",
       price: 379,
       category: "signature",
-    image: "../../assets/burger1.png",
+      image: "../../assets/burger1.png",
       popular: false,
       spicy: false,
       vegetarian: false,
       preparationTime: 14,
       rating: 4.6,
-      calories: 620
+      calories: 620,
     },
     // Chicken Burgers
     {
@@ -95,7 +97,7 @@ const menuData = {
       vegetarian: false,
       preparationTime: 10,
       rating: 4.5,
-      calories: 520
+      calories: 520,
     },
     {
       id: 6,
@@ -109,7 +111,7 @@ const menuData = {
       vegetarian: false,
       preparationTime: 12,
       rating: 4.4,
-      calories: 560
+      calories: 560,
     },
     // Vegetarian
     {
@@ -118,13 +120,13 @@ const menuData = {
       description: "Grilled vegetable patty with avocado, sprouts, and herb mayo",
       price: 279,
       category: "veg",
-     image: "../../assets/burger1.png",
+      image: "../../assets/burger1.png",
       popular: true,
       spicy: false,
       vegetarian: true,
       preparationTime: 8,
       rating: 4.3,
-      calories: 420
+      calories: 420,
     },
     {
       id: 8,
@@ -138,7 +140,7 @@ const menuData = {
       vegetarian: true,
       preparationTime: 9,
       rating: 4.2,
-      calories: 380
+      calories: 380,
     },
     // Combos
     {
@@ -153,7 +155,7 @@ const menuData = {
       vegetarian: false,
       preparationTime: 15,
       rating: 4.7,
-      calories: 950
+      calories: 950,
     },
     {
       id: 10,
@@ -161,13 +163,13 @@ const menuData = {
       description: "4 Burgers + Large Fries + 4 Drinks + 2 Desserts",
       price: 1599,
       category: "combo",
-     image: "../../assets/burger2.png",
+      image: "../../assets/burger2.png",
       popular: false,
       spicy: false,
       vegetarian: false,
       preparationTime: 20,
       rating: 4.8,
-      calories: 2800
+      calories: 2800,
     },
     // Sides
     {
@@ -182,7 +184,7 @@ const menuData = {
       vegetarian: true,
       preparationTime: 5,
       rating: 4.5,
-      calories: 320
+      calories: 320,
     },
     {
       id: 12,
@@ -196,7 +198,7 @@ const menuData = {
       vegetarian: true,
       preparationTime: 6,
       rating: 4.4,
-      calories: 280
+      calories: 280,
     },
     // Beverages
     {
@@ -205,13 +207,13 @@ const menuData = {
       description: "Refreshing cola served chilled",
       price: 79,
       category: "beverages",
-     image: "../../assets/burger2.png",
+      image: "../../assets/burger2.png",
       popular: true,
       spicy: false,
       vegetarian: true,
       preparationTime: 2,
       rating: 4.3,
-      calories: 150
+      calories: 150,
     },
     {
       id: 14,
@@ -225,34 +227,52 @@ const menuData = {
       vegetarian: true,
       preparationTime: 3,
       rating: 4.6,
-      calories: 120
-    }
-  ]
+      calories: 120,
+    },
+  ],
 };
 
 const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("popular");
- 
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     vegetarian: false,
     spicy: false,
-    popular: false
+    popular: false,
   });
 
-  // Filter and sort items
+  const dispatch = useDispatch();
+  const { cartItems } = useSelector((state) => state.cart);
+
+  // ✅ Add-to-cart logic (Redux)
+// ✅ Add-to-cart logic (Redux)
+const addToCart = (item) => {
+  dispatch({ type: "addToCart", payload: item });
+  dispatch({ type: "calculatePrice" });
+  toast.success(`${item.name} added to cart`);
+};
+
+
+  // Filter & sort items
   const filteredItems = menuData.items
-    .filter(item => {
-      const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    .filter((item) => {
+      const matchesCategory =
+        selectedCategory === "all" || item.category === selectedCategory;
+      const matchesSearch =
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesVegetarian = !filters.vegetarian || item.vegetarian;
       const matchesSpicy = !filters.spicy || item.spicy;
       const matchesPopular = !filters.popular || item.popular;
-      
-      return matchesCategory && matchesSearch && matchesVegetarian && matchesSpicy && matchesPopular;
+      return (
+        matchesCategory &&
+        matchesSearch &&
+        matchesVegetarian &&
+        matchesSpicy &&
+        matchesPopular
+      );
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -270,18 +290,12 @@ const Menu = () => {
       }
     });
 
- 
-
- 
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+      transition: { staggerChildren: 0.1 },
+    },
   };
 
   const itemVariants = {
@@ -289,33 +303,13 @@ const Menu = () => {
     visible: {
       y: 0,
       opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
   };
-
-  const dispatch = useDispatch();
-const { cartItems } = useSelector((state) => state.cart);
-
-const addToCart = (item) => {
-  if (item.name.includes("Cheese Burger with French Fries")) {
-    dispatch({ type: "burgerWithFriesIncrement" });
-  } else if (item.name.includes("Veg Cheese")) {
-    dispatch({ type: "vegCheeseBurgerIncrement" });
-  } else if (item.name.includes("Cheese Burger")) {
-    dispatch({ type: "cheeseBurgerIncrement" });
-  }
-
-  dispatch({ type: "calculatePrice" });
-};
-
 
   return (
     <section className="menu-page">
-      {/* Header */}
-      <motion.div 
+      <motion.div
         className="menu-header"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -325,11 +319,10 @@ const addToCart = (item) => {
           <h1>Our Delicious Menu</h1>
           <p>Handcrafted burgers made with love and the finest ingredients</p>
         </div>
-      
       </motion.div>
 
       {/* Search and Filters */}
-      <motion.div 
+      <motion.div
         className="menu-controls"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -344,18 +337,18 @@ const addToCart = (item) => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        
+
         <div className="control-buttons">
-          <button 
-            className={`filter-btn ${showFilters ? 'active' : ''}`}
+          <button
+            className={`filter-btn ${showFilters ? "active" : ""}`}
             onClick={() => setShowFilters(!showFilters)}
           >
             <FiFilter />
             Filters
           </button>
-          
-          <select 
-            value={sortBy} 
+
+          <select
+            value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
             className="sort-select"
           >
@@ -368,10 +361,9 @@ const addToCart = (item) => {
         </div>
       </motion.div>
 
-      {/* Filter Options */}
       <AnimatePresence>
         {showFilters && (
-          <motion.div 
+          <motion.div
             className="filter-options"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -383,7 +375,12 @@ const addToCart = (item) => {
                 <input
                   type="checkbox"
                   checked={filters.vegetarian}
-                  onChange={(e) => setFilters(prev => ({ ...prev, vegetarian: e.target.checked }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      vegetarian: e.target.checked,
+                    }))
+                  }
                 />
                 Vegetarian Only
               </label>
@@ -391,7 +388,12 @@ const addToCart = (item) => {
                 <input
                   type="checkbox"
                   checked={filters.spicy}
-                  onChange={(e) => setFilters(prev => ({ ...prev, spicy: e.target.checked }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      spicy: e.target.checked,
+                    }))
+                  }
                 />
                 Spicy Items
               </label>
@@ -399,7 +401,12 @@ const addToCart = (item) => {
                 <input
                   type="checkbox"
                   checked={filters.popular}
-                  onChange={(e) => setFilters(prev => ({ ...prev, popular: e.target.checked }))}
+                  onChange={(e) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      popular: e.target.checked,
+                    }))
+                  }
                 />
                 Popular Items
               </label>
@@ -408,17 +415,19 @@ const addToCart = (item) => {
         )}
       </AnimatePresence>
 
-      {/* Category Tabs */}
-      <motion.div 
+      {/* Categories */}
+      <motion.div
         className="category-tabs"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6 }}
       >
-        {menuData.categories.map(category => (
+        {menuData.categories.map((category) => (
           <button
             key={category.id}
-            className={`category-tab ${selectedCategory === category.id ? 'active' : ''}`}
+            className={`category-tab ${
+              selectedCategory === category.id ? "active" : ""
+            }`}
             onClick={() => setSelectedCategory(category.id)}
           >
             <span className="category-icon">{category.icon}</span>
@@ -427,8 +436,8 @@ const addToCart = (item) => {
         ))}
       </motion.div>
 
-      {/* Menu Items Grid */}
-      <motion.div 
+      {/* Menu Items */}
+      <motion.div
         className="menu-grid"
         variants={containerVariants}
         initial="hidden"
@@ -436,7 +445,7 @@ const addToCart = (item) => {
         key={`${selectedCategory}-${searchQuery}-${sortBy}`}
       >
         {filteredItems.length > 0 ? (
-          filteredItems.map(item => (
+          filteredItems.map((item) => (
             <motion.div
               key={item.id}
               className="menu-item"
@@ -470,9 +479,9 @@ const addToCart = (item) => {
                   <h3>{item.name}</h3>
                   <span className="item-price">₹{item.price}</span>
                 </div>
-                
+
                 <p className="item-description">{item.description}</p>
-                
+
                 <div className="item-meta">
                   <div className="meta-item">
                     <FiStar className="meta-icon" />
@@ -488,7 +497,7 @@ const addToCart = (item) => {
                   </div>
                 </div>
 
-                <button 
+                <button
                   className="add-to-cart-btn"
                   onClick={() => addToCart(item)}
                 >
@@ -499,7 +508,7 @@ const addToCart = (item) => {
             </motion.div>
           ))
         ) : (
-          <motion.div 
+          <motion.div
             className="no-items"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -510,8 +519,8 @@ const addToCart = (item) => {
         )}
       </motion.div>
 
-      {/* Special Offers Banner */}
-      <motion.div 
+      {/* Offers */}
+      <motion.div
         className="special-offers"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -524,7 +533,7 @@ const addToCart = (item) => {
             <span className="offer-code">Use code: WEEKEND20</span>
           </div>
         </div>
-        
+
         <div className="offer-card">
           <div className="offer-content">
             <h3>🚚 Free Delivery</h3>

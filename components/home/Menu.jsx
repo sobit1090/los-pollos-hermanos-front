@@ -1,12 +1,19 @@
 import React from "react";
 import MenuCard from "./MenuCard";
 import burger1 from "../../assets/burger1.png";
-import { motion } from "framer-motion";
 import burger2 from "../../assets/burger2.png";
 import burger3 from "../../assets/burger3.png";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 function Menu() {
-  const navigate= useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // ✅ Optional: Access cart to prevent duplicates (if needed)
+  const { cartItems = [] } = useSelector((state) => state.cart || {});
+
   const menuItems = [
     {
       id: 1,
@@ -34,8 +41,27 @@ function Menu() {
     }
   ];
 
+  // ✅ Redux-based Add to Cart Handler
   const addToCartHandler = (item) => {
-    console.log("Added to cart:", item);
+    // Check if item already in cart (optional)
+    const exists = cartItems.find((i) => i.id === item.id);
+
+    if (exists) {
+      dispatch({ type: "addToCart", payload: { ...item } });
+    } else {
+      dispatch({
+        type: "addToCart",
+        payload: {
+          id: item.id,
+          name: item.title,
+          price: item.price,
+          image: item.image,
+          quantity: 1
+        }
+      });
+    }
+
+    dispatch({ type: "calculatePrice" });
   };
 
   return (
@@ -56,7 +82,7 @@ function Menu() {
             key={item.id}
             item={item}
             index={index}
-            handler={addToCartHandler}
+            handler={() => addToCartHandler(item)} // ✅ Connect Redux logic
           />
         ))}
       </div>
@@ -68,7 +94,9 @@ function Menu() {
         transition={{ delay: 0.5 }}
       >
         <p>Can't decide? Try our <strong>Burger Sampler Platter</strong></p>
-        <button onClick={()=>navigate("/NewMenu")} className="cta-secondary">View All Items</button>
+        <button onClick={() => navigate("/NewMenu")} className="cta-secondary">
+          View All Items
+        </button>
       </motion.div>
     </section>
   );

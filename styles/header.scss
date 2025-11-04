@@ -32,14 +32,15 @@
   }
 
   .logo {
+    
     display: flex;
     align-items: center;
     gap: 0.75rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    
 
     .logo-icon {
-      height: 65px;
+      height: 110px;
     }
 
     .logo-text {

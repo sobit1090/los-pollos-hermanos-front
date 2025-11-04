@@ -22,7 +22,7 @@ body.users-page .footer-nav {
 
     .table-header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
       
       h1 {
         font: 600 2.2rem "Roboto";
@@ -39,7 +39,7 @@ body.users-page .footer-nav {
     /* Table Header - Desktop */
     .tableHeader {
       display: grid;
-      grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr  2fr;
       text-align: center;
       background: linear-gradient(135deg, $dark 0%, darken($dark, 10%) 100%);
       color: white;
@@ -64,7 +64,7 @@ body.users-page .footer-nav {
     /* Table Rows - Desktop */
     .tableRow {
       display: grid;
-      grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 1fr 2fr 1fr 1fr 1fr 1fr  2fr;
       text-align: center;
       background-color: #fafafa;
       transition: all 0.3s ease;

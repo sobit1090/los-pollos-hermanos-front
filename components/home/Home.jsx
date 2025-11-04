@@ -4,7 +4,9 @@ import Founder from "./Founder";
 import Menu from "./Menu";
 import FooterDescription from "./FooterDescription";
 
+
 function Home() {
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -37,7 +39,7 @@ function Home() {
           animate="visible"
         >
           <motion.h1 variants={itemVariants} className="hero-title">
-            Los Polos Burger's
+            Los Pollos Burger's
           </motion.h1>
           <motion.p variants={itemVariants} className="hero-subtitle">
             Crafted with passion, served with perfection

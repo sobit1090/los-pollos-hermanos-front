@@ -12,10 +12,20 @@ import {
   MdEmail
 } from "react-icons/md";
 import { FiUser, FiShoppingCart, FiLogOut } from "react-icons/fi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+ 
 import {logout} from "../../redux/actions/user"
 
 const Profile = () => {
+    
+  // Try different Redux state locations
+  const authState = useSelector((state) => state.auth);
+  const userState = useSelector((state) => state.user);
+  
+  // Get user from different possible locations
+  const userDetail = authState.user || userState.user || userState.data || {};
+
+  
   useEffect(() => {
     document.body.classList.add('profile-page');
     return () => {
@@ -46,15 +56,23 @@ const Profile = () => {
   };
 
   const user = {
-    name: "Abhishek Sharma",
-    email: "abhishek@example.com",
-    joinDate: "March 2023",
-    orders: 12,
-    role: "Admin"
+    name: userDetail.name|| "Name",
+    email: userDetail.email||"abc@example.com",
+    joinDate: userDetail.createdAt 
+    ? new Date(userDetail.createdAt).toLocaleDateString('en-US', { 
+        month: 'long', 
+        year: 'numeric' 
+      })
+    : "March 2023",
+    photo: userDetail.photo,
+    orders: userDetail.orders|| 0,
+    role: userDetail.role ,
   };
   const dispatch=useDispatch();
  const logoutHandler=()=>{
-    dispatch(logout())
+     window.location.href = "https://los-pollos-hermanos-0ui5.onrender.com/api/v1/logout";
+     dispatch({ type: "emptyState" });
+localStorage.removeItem("cart");
  }
   return (
     <section className="profile">
@@ -67,7 +85,7 @@ const Profile = () => {
         <motion.div className="profile-header" variants={itemVariants}>
           <div className="avatar-container">
             <motion.img 
-              src={me} 
+              src={user.photo} 
               alt="User" 
               className="profile-avatar"
               whileHover={{ scale: 1.05 }}
@@ -104,15 +122,18 @@ const Profile = () => {
         <motion.div className="quick-actions" variants={itemVariants}>
           <h2>Quick Actions</h2>
           <div className="actions-grid">
-            <Link to="/admin/dashboard" className="action-card primary">
-              <div className="action-icon">
-                <MdDashboard />
-              </div>
-              <div className="action-content">
-                <h3>Dashboard</h3>
-                <p>Admin panel & analytics</p>
-              </div>
-            </Link>
+
+          {userDetail?.role === "admin" && (
+      <Link to="/admin/dashboard" className="action-card primary">
+        <div className="action-icon">
+          <MdDashboard />
+        </div>
+        <div className="action-content">
+          <h3>Dashboard</h3>
+          <p>Admin panel & analytics</p>
+        </div>
+      </Link>
+    )}
 
             <Link to="/myorders" className="action-card success">
               <div className="action-icon">

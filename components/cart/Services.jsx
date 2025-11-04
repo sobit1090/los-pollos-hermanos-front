@@ -17,7 +17,7 @@ const Services = () => {
       title: "Dine In",
       description: "Experience our cozy ambiance and enjoy freshly prepared meals in our restaurant",
       icon: FiCoffee,
-      path: "/dinein",
+      path: "/confirmOrder",
       color: "#DC2626",
       gradient: "linear-gradient(135deg, #DC2626, #EF4444)",
       features: ["Comfortable Seating", "Fast Service", "Ambient Music"]

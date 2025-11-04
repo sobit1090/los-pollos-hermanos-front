@@ -45,43 +45,35 @@ const CartItem = ({ value, title, img, price, increment, decrement, removeItem }
 const FoodCart = () => {
   const dispatch = useDispatch();
 
-  // ✅ Safe Redux selector (with optional chaining)
-  const { cartItems = {}, subtotal = 0, tax = 0, shippingCharges = 0, total = 0 } =
+  // ✅ Updated logic: connect to cartReducer
+  const { cartItems = [], subTotal = 0, tax = 0, shippingCharges = 0, total = 0 } =
     useSelector((state) => state.cart || {});
 
-  // ✅ Create items array safely using optional chaining
-  const items = [
-    {
-      id: 1,
-      title: "Cheese Burger",
-      img: "/assets/burger1.png",
-      price: 299,
-      quantity: cartItems?.cheeseBurger?.quantity || 0,
-    },
-    {
-      id: 2,
-      title: "Veg Cheese Burger",
-      img: "/assets/burger2.png",
-      price: 249,
-      quantity: cartItems?.vegCheeseBurger?.quantity || 0,
-    },
-    {
-      id: 3,
-      title: "Cheese Burger with French Fries",
-      img: "/assets/burger3.png",
-      price: 499,
-      quantity: cartItems?.burgerWithFries?.quantity || 0,
-    },
-  ].filter((i) => i.quantity > 0);
+  // ✅ Convert old static items to dynamic Redux-based items
+  const items = cartItems.map((item) => ({
+    id: item.id,
+    title: item.name || item.title,
+    img: item.image,
+    price: item.price,
+    quantity: item.quantity,
+  }));
 
-  // 🔹 Dispatch Handlers
-  const increment = (name) => {
-    dispatch({ type: `${name}Increment` });
+  // 🔹 Dispatch Handlers — integrated with Redux logic
+  const increment = (id) => {
+    const item = cartItems.find((i) => i.id === id);
+    if (item) {
+      dispatch({ type: "addToCart", payload: item });
+      dispatch({ type: "calculatePrice" });
+    }
+  };
+
+  const decrement = (id) => {
+    dispatch({ type: "decrementItem", payload: id });
     dispatch({ type: "calculatePrice" });
   };
 
-  const decrement = (name) => {
-    dispatch({ type: `${name}Decrement` });
+  const removeItem = (id) => {
+    dispatch({ type: "removeFromCart", payload: id });
     dispatch({ type: "calculatePrice" });
   };
 
@@ -132,30 +124,9 @@ const FoodCart = () => {
                     img={item.img}
                     price={item.price}
                     value={item.quantity}
-                    increment={() =>
-                      increment(
-                        item.title.includes("Fries")
-                          ? "burgerWithFries"
-                          : item.title.includes("Veg")
-                          ? "vegCheeseBurger"
-                          : "cheeseBurger"
-                      )
-                    }
-                    decrement={() =>
-                      decrement(
-                        item.title.includes("Fries")
-                          ? "burgerWithFries"
-                          : item.title.includes("Veg")
-                          ? "vegCheeseBurger"
-                          : "cheeseBurger"
-                      )
-                    }
-                    removeItem={() =>
-                      dispatch({
-                        type: "removeItem",
-                        payload: item.title,
-                      })
-                    }
+                    increment={() => increment(item.id)}
+                    decrement={() => decrement(item.id)}
+                    removeItem={() => removeItem(item.id)}
                   />
                 ))}
               </AnimatePresence>
@@ -174,7 +145,7 @@ const FoodCart = () => {
                 <span>
                   Subtotal ({totalItems} {totalItems === 1 ? "item" : "items"})
                 </span>
-                <span>₹{subtotal}</span>
+                <span>₹{subTotal}</span>
               </div>
 
               <div className="summary-row">

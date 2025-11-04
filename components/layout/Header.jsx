@@ -5,7 +5,7 @@ import { IoFastFoodOutline } from "react-icons/io5"
 import { FiShoppingCart, FiLogIn } from "react-icons/fi"
 import { FaUser } from "react-icons/fa"
 
-const Header = ({ isAuthenticated = false, cartItemsCount = 3 }) => {
+const Header = ({ isAuthenticated = false, cartItemsCount }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,7 +38,7 @@ const Header = ({ isAuthenticated = false, cartItemsCount = 3 }) => {
     >
       <div className="nav-container">
         {/* Logo */}
-        <motion.div
+        <motion.div 
           className="logo"
           onClick={handleLogoClick}
           whileHover={{ scale: 1.05 }}
@@ -47,9 +47,9 @@ const Header = ({ isAuthenticated = false, cartItemsCount = 3 }) => {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-  <img src="../../assets/Los_Pollos.png" alt="Logo" className="logo-icon" />
+  <img src="../../assets/20251031_1858_Los Pollos Logo_remix_01k8x75tg6fk69gs1818epc8q3.png" alt="Logo" className="logo-icon" />
 
-          <span className="logo-text">Los Polos</span>
+          <span className="logo-text">Los Pollos</span>
         </motion.div>
 
         {/* Desktop Navigation */}

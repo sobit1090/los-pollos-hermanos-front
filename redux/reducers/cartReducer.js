@@ -1,7 +1,7 @@
 import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
-  cartItems: [],
+  cartItems: [], // each item has id, name, price, quantity
   subTotal: 0,
   tax: 0,
   shippingCharges: 0,
@@ -11,6 +11,7 @@ const initialState = {
 
 export const cartReducer = createReducer(initialState, (builder) => {
   builder
+    // ✅ Add or increment item
     .addCase("addToCart", (state, action) => {
       const item = action.payload;
       const existing = state.cartItems.find((i) => i.id === item.id);
@@ -22,10 +23,12 @@ export const cartReducer = createReducer(initialState, (builder) => {
       }
     })
 
+    // ✅ Remove item entirely
     .addCase("removeFromCart", (state, action) => {
       state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
     })
 
+    // ✅ Decrement item quantity
     .addCase("decrementItem", (state, action) => {
       const existing = state.cartItems.find((i) => i.id === action.payload);
       if (existing) {
@@ -36,16 +39,18 @@ export const cartReducer = createReducer(initialState, (builder) => {
       }
     })
 
+    // ✅ Recalculate all totals
     .addCase("calculatePrice", (state) => {
       state.subTotal = state.cartItems.reduce(
         (acc, item) => acc + item.price * item.quantity,
         0
       );
-      state.tax = state.subTotal * 0.18;
+      state.tax = +(state.subTotal * 0.18).toFixed(2);
       state.shippingCharges = state.subTotal > 1000 ? 0 : 200;
-      state.total = state.subTotal + state.tax + state.shippingCharges;
+      state.total = +(state.subTotal + state.tax + state.shippingCharges).toFixed(2);
     })
 
+    // ✅ Empty cart
     .addCase("emptyState", (state) => {
       state.cartItems = [];
       state.subTotal = 0;
@@ -54,6 +59,7 @@ export const cartReducer = createReducer(initialState, (builder) => {
       state.total = 0;
     })
 
+    // ✅ Add shipping info
     .addCase("addShippingInfo", (state, action) => {
       state.shippingInfo = action.payload;
     });
