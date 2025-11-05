@@ -3,6 +3,9 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import me from "../../assets/founder.webp";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { server } from "../../redux/store";
 import { 
   MdDashboard, 
   MdShoppingBag, 
@@ -69,11 +72,23 @@ const Profile = () => {
     role: userDetail.role ,
   };
   const dispatch=useDispatch();
- const logoutHandler=()=>{
-     window.location.href = "https://los-pollos-hermanos-0ui5.onrender.com/api/v1/logout";
-     dispatch({ type: "emptyState" });
-localStorage.removeItem("cart");
- }
+const logoutHandler = async () => {
+  try {
+    await axios.get(`${server}/logout`, { withCredentials: true });
+
+    dispatch({ type: "logoutSuccess", payload: "Logged out successfully" });
+    dispatch({ type: "emptyState" });
+    localStorage.removeItem("cart");
+
+    // Force refresh user state
+    window.location.href = "/login";
+
+  } catch (error) {
+    console.error(error);
+    toast.error("Logout failed");
+  }
+};
+
   return (
     <section className="profile">
       <motion.main

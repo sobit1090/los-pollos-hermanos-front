@@ -1,5 +1,4 @@
-@import "colors";
-
+@use "colors" as *;
 .paymentsuccess {
   background-color: $pink;
   width: 100%;

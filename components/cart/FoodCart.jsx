@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,7 +49,9 @@ const FoodCart = () => {
   // ✅ Updated logic: connect to cartReducer
   const { cartItems = [], subTotal = 0, tax = 0, shippingCharges = 0, total = 0 } =
     useSelector((state) => state.cart || {});
-
+useEffect(() => {
+  dispatch({ type: "calculatePrice" });
+}, [cartItems, dispatch]);
   // ✅ Convert old static items to dynamic Redux-based items
   const items = cartItems.map((item) => ({
     id: item.id,
@@ -144,6 +147,7 @@ const FoodCart = () => {
               <div className="summary-row">
                 <span>
                   Subtotal ({totalItems} {totalItems === 1 ? "item" : "items"})
+                  
                 </span>
                 <span>₹{subTotal}</span>
               </div>

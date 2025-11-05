@@ -1,4 +1,4 @@
-@import "colors";
+@use "colors" as *;
 
 /* Hide footer-nav only on Profile page */
 body.profile-page .footer-nav {

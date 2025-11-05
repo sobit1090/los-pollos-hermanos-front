@@ -1,4 +1,4 @@
-@import "colors";
+@use "colors" as *;
 
 /* Hide footer-nav only on Users page */
 body.users-page .footer-nav {

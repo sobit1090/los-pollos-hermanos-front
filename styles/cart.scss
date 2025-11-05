@@ -1,7 +1,8 @@
-@import "colors";
+@use "sass:color";
+@use "colors" as *;
 
 .cart {
-  background: linear-gradient(135deg, $pink 0%, lighten($pink, 10%) 100%);
+  background: linear-gradient(135deg, $pink 0%, color.adjust($pink, $lightness: 10%) 100%);
   width: 100%;
   min-height: 100vh;
   padding: 2rem 1rem;
@@ -26,7 +27,7 @@
         font: 600 2.2rem "Roboto";
         color: $dark;
         margin-bottom: 0.5rem;
-        background: linear-gradient(135deg, $dark, lighten($dark, 20%));
+        background: linear-gradient(135deg, $dark, color.adjust($dark, $lightness: 20%));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -79,7 +80,7 @@
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, $dark, lighten($dark, 10%));
+        background: linear-gradient(135deg, $dark, color.adjust($dark, $lightness: 10%));
         color: white;
         padding: 1rem 2rem;
         border-radius: 12px;
@@ -121,16 +122,16 @@
         align-items: center;
         gap: 1rem;
 
-.item-image {
-  width: 150px;            /* 🔹 bigger image */
-  height: 140px;           /* 🔹 bigger image */
-  object-fit: contain;     /* show full image without cutting */
-  border-radius: 16px;
-  border: 2px solid #f8f9fa;
-  background-color: #fff;  /* keeps contrast behind image */
-  padding: 6px;            /* adds breathing space */
-  transition: transform 0.3s ease; /* optional - smooth zoom hover */
-}
+        .item-image {
+          width: 150px;            /* 🔹 bigger image */
+          height: 140px;           /* 🔹 bigger image */
+          object-fit: contain;     /* show full image without cutting */
+          border-radius: 16px;
+          border: 2px solid #f8f9fa;
+          background-color: #fff;  /* keeps contrast behind image */
+          padding: 6px;            /* adds breathing space */
+          transition: transform 0.3s ease; /* optional - smooth zoom hover */
+        }
 
         .item-details {
           h4 {

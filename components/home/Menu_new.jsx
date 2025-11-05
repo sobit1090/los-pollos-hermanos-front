@@ -244,7 +244,8 @@ const Menu = () => {
   });
 
   const dispatch = useDispatch();
-  const { cartItems } = useSelector((state) => state.cart);
+   const { cartItems = [], subTotal = 0, tax = 0, shippingCharges = 0, total = 0 } =
+      useSelector((state) => state.cart || {});
 
   // ✅ Add-to-cart logic (Redux)
 // ✅ Add-to-cart logic (Redux)
@@ -496,14 +497,40 @@ const addToCart = (item) => {
                     <span>{item.calories} cal</span>
                   </div>
                 </div>
+ {/* Check if item is already in cart */}
+{cartItems.some((cartItem) => cartItem.id === item.id) ? (
+  <div className="quantity-controls">
+    <button
+      className="qty-btn"
+      onClick={() => {dispatch({ type: "removeFromCart", payload: item });
+      dispatch({ type: "addToCart", payload: item });
+    dispatch({ type: "calculatePrice" });
+    }}
+    >
+      -
+    </button>
 
-                <button
-                  className="add-to-cart-btn"
-                  onClick={() => addToCart(item)}
-                >
-                  <FiShoppingCart />
-                  Add to Cart
-                </button>
+    <span className="qty-count">
+      {cartItems.find((cartItem) => cartItem.id === item.id)?.quantity}
+    </span>
+
+    <button
+      className="qty-btn"
+      onClick={() => dispatch({ type: "addToCart", payload: item })}
+    >
+      +
+    </button>
+  </div>
+) : (
+  <button
+    className="add-to-cart-btn"
+    onClick={() => addToCart(item)}
+  >
+    <FiShoppingCart />
+    Add to Cart
+  </button>
+)}
+
               </div>
             </motion.div>
           ))

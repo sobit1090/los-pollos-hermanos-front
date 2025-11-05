@@ -3,9 +3,11 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { server } from "../../redux/store";
-
+import { useDispatch } from "react-redux";
+import {loadUser} from "../../redux/actions/user.js"
 const LoginForm = () => {
-  const navigate = useNavigate();
+  const dispatch=useDispatch();
+  //const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -27,7 +29,7 @@ const handleSubmit = async (e) => {
     // ✅ Load user into Redux to update isAuthenticated
     await dispatch(loadUser());
 
-    navigate("/profile");
+    window.href("/profile");
   } catch (error) {
     toast.error(error.response?.data?.message || "Login failed");
   }

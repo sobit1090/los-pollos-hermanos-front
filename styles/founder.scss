@@ -1,8 +1,9 @@
-@import "colors";
+@use "sass:color";
+@use "colors" as *;
 
 .founder {
   padding: 4rem 2rem;
-  background: linear-gradient(135deg, $red 0%, lighten($red, 15%) 100%);
+  background: linear-gradient(135deg, $red 0%, color.adjust($red, $lightness: 15%) 100%);
   color: white;
   position: relative;
   overflow: hidden;

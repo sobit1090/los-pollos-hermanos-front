@@ -1,5 +1,4 @@
-@import "colors";
-
+@use "colors" as *;
 .orderDetails {
   background-color: $pink;
   width: 100%;

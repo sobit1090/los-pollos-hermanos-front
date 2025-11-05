@@ -1,7 +1,8 @@
-@import "colors";
+@use "sass:color";
+@use "colors" as *;
 
 .confirmOrder {
-  background: linear-gradient(135deg, $pink 0%, lighten($pink, 10%) 100%);
+  background: linear-gradient(135deg, $pink 0%, color.adjust($pink, $lightness: 10%) 100%);
   width: 100%;
   min-height: 100vh;
   padding: 2rem 1rem;
@@ -26,7 +27,7 @@
 
       h1 {
         font: 600 2.5rem "Roboto";
-        background: linear-gradient(135deg, $dark, lighten($dark, 20%));
+        background: linear-gradient(135deg, $dark, color.adjust($dark, $lightness: 20%));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;

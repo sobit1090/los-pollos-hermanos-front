@@ -1,5 +1,4 @@
-@import "colors";
-
+@use "colors" as *;
 .nav {
   position: fixed;
   top: 0;
