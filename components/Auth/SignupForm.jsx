@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { toast } from "react-hot-toast"; // optional, for better UX
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom"; // ✅ import navigate hook
 
 const SignupForm = () => {
-  // 🟢 State variables for form inputs
+  const navigate = useNavigate(); // ✅ initialize navigate
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,15 +16,18 @@ const SignupForm = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:4000/api/v1/register", // your backend route
+        "https://los-pollos-hermanos-0ui5.onrender.com/api/v1/register",
         { name, email, password },
         { withCredentials: true }
       );
 
       toast.success("Registration successful!");
-      console.log("Registered User:", data.user);
+      toast.success(" Now You Can Login!")
 
-      // Optionally reset the form
+      // ✅ Redirect to login page (or home)
+      navigate("/login"); // 👈 redirect after success
+
+      // Optionally reset form
       setName("");
       setEmail("");
       setPassword("");
