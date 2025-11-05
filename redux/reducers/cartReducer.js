@@ -7,6 +7,7 @@ const initialState = {
   shippingCharges: 0,
   total: 0,
   shippingInfo: {},
+  serviceType:"",
 };
 
 export const cartReducer = createReducer(initialState, (builder) => {
@@ -22,7 +23,9 @@ export const cartReducer = createReducer(initialState, (builder) => {
         state.cartItems.push({ ...item, quantity: 1 });
       }
     })
-
+ .addCase("setServiceType", (state, action) => {
+      state.serviceType = action.payload;
+    })
     // ✅ Remove item entirely
     .addCase("removeFromCart", (state, action) => {
       state.cartItems = state.cartItems.filter((i) => i.id !== action.payload);
@@ -64,3 +67,6 @@ export const cartReducer = createReducer(initialState, (builder) => {
       state.shippingInfo = action.payload;
     });
 });
+
+    import { createAction } from "@reduxjs/toolkit";
+export const setServiceType = createAction("setServiceType");

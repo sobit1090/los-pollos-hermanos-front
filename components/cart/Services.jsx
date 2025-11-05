@@ -1,4 +1,6 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setServiceType } from "../../redux/reducers/cartReducer";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
@@ -9,6 +11,7 @@ import {
 } from "react-icons/fi";
 
 const Services = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const services = [
@@ -17,6 +20,7 @@ const Services = () => {
       title: "Dine In",
       description: "Experience our cozy ambiance and enjoy freshly prepared meals in our restaurant",
       icon: FiCoffee,
+      type: "dinein",
       path: "/confirmOrder",
       color: "#DC2626",
       gradient: "linear-gradient(135deg, #DC2626, #EF4444)",
@@ -27,7 +31,8 @@ const Services = () => {
       title: "Take Away",
       description: "Grab your favorite meals on the go with our quick packaging system",
       icon: FiShoppingBag,
-      path: "/takeaway",
+      type: "takeaway",
+      path: "/confirmOrder",
       color: "#2563EB",
       gradient: "linear-gradient(135deg, #2563EB, #3B82F6)",
       features: ["Quick Packaging", "Easy Ordering", "Hot & Fresh"]
@@ -37,12 +42,18 @@ const Services = () => {
       title: "Delivery",
       description: "Get your favorite burgers delivered hot and fresh right to your doorstep",
       icon: FiTruck,
+      type: "delivery",
       path: "/shipping",
       color: "#059669",
       gradient: "linear-gradient(135deg, #059669, #10B981)",
       features: ["Fast Delivery", "Live Tracking", "Contactless"]
     }
   ];
+
+  const handleSelect = (type, path) => {
+    dispatch(setServiceType(type)); // save type (dinein/takeaway/delivery)
+    navigate(path); // go next
+  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -101,7 +112,7 @@ const Services = () => {
             variants={cardVariants}
             whileHover="hover"
             whileTap={{ scale: 0.95 }}
-            onClick={() => navigate(service.path)}
+            onClick={() => handleSelect(service.type, service.path)}
           >
             {/* Icon Circle */}
             <motion.div 

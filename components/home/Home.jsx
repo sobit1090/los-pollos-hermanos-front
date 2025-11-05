@@ -53,7 +53,7 @@ function Home() {
         <motion.a
           className="cta-button"
           variants={itemVariants}
-          href="#menu"
+          href="/NewMenu"
           whileHover={{ 
             scale: 1.05,
             boxShadow: "0 10px 30px rgba(220, 53, 69, 0.4)"

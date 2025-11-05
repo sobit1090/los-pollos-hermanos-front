@@ -1,14 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  FiCreditCard, 
-  FiDollarSign, 
-  FiCheck, 
+import { useSelector } from "react-redux";
+import {
+  FiCreditCard,
+  FiDollarSign,
+  FiCheck,
   FiArrowRight,
   FiShield,
   FiClock,
-  FiTruck
 } from "react-icons/fi";
 
 function ConfirmOrder() {
@@ -16,47 +16,84 @@ function ConfirmOrder() {
   const [selectedPayment, setSelectedPayment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // ✅ Get cart data + serviceType from Redux
+  const {
+    cartItems = [],
+    subTotal = 0,
+    tax = 0,
+    shippingCharges = 0,
+    total = 0,
+    serviceType = "",
+  } = useSelector((state) => state.cart || {});
+
+  // ✅ Order summary
   const orderSummary = {
-    items: [
-      { name: "Cheese Burger", quantity: 2, price: 299 },
-      { name: "Veg Supreme", quantity: 1, price: 249 },
-      { name: "French Fries", quantity: 1, price: 99 }
-    ],
-    subtotal: 846,
-    tax: 152,
-    shipping: 40,
-    total: 1038
+    items: cartItems.map((item) => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+    })),
+    subtotal: subTotal,
+    tax,
+    shipping: shippingCharges,
+    total,
   };
 
-  const paymentMethods = [
-    {
-      id: "cod",
-      name: "Cash On Delivery",
-      description: "Pay when you receive your order",
-      icon: FiDollarSign,
-      benefits: ["No online payment required", "Pay with cash", "Secure delivery"],
-      deliveryTime: "30-45 mins"
-    },
+  // ✅ Base payment options
+  const baseMethods = [
     {
       id: "online",
       name: "Online Payment",
       description: "Pay securely with your card or UPI",
       icon: FiCreditCard,
-      benefits: ["Instant confirmation", "Secure encryption", "Multiple options"],
-      deliveryTime: "25-40 mins"
-    }
+      benefits: [
+        "Instant confirmation",
+        "Secure encryption",
+        "Multiple options",
+      ],
+      deliveryTime: "25-40 mins",
+    },
   ];
 
+  // ✅ Conditional payment based on serviceType
+  let paymentMethods = [...baseMethods];
+
+  if (serviceType === "dinein"|| serviceType==="takeaway") {
+    paymentMethods.unshift({
+      id: "pac",
+      name: "Pay At Counter",
+      description: "Pay directly at the counter",
+      icon: FiDollarSign,
+      benefits: [
+        "No online payment required",
+        "Instant confirmation at counter",
+      ],
+      deliveryTime: "Served immediately",
+    });
+  } else if (serviceType === "delivery") {
+    paymentMethods.unshift({
+      id: "cod",
+      name: "Cash On Delivery",
+      description: "Pay when you receive your order",
+      icon: FiDollarSign,
+      benefits: [
+        "No online payment required",
+        "Pay with cash at delivery",
+        "Secure doorstep service",
+      ],
+      deliveryTime: "30-45 mins",
+    });
+  }
+
+  // ✅ Handle payment submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedPayment) return;
-
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    if (selectedPayment === "cod") {
+
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    if (selectedPayment === "cod" || selectedPayment === "pac") {
       navigate("/CashOnDelivery");
     } else {
       navigate("/payment");
@@ -65,24 +102,12 @@ function ConfirmOrder() {
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
 
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } },
   };
 
   return (
@@ -105,13 +130,13 @@ function ConfirmOrder() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            Review your order and choose payment method
+            Review your order and choose a payment method
           </motion.p>
         </div>
 
         <div className="content-grid">
-          {/* Order Summary */}
-          <motion.div 
+          {/* 🧾 Order Summary */}
+          <motion.div
             className="summary-card"
             variants={itemVariants}
             initial="hidden"
@@ -121,7 +146,7 @@ function ConfirmOrder() {
               <FiCheck className="icon" />
               <h2>Order Summary</h2>
             </div>
-            
+
             <div className="order-items">
               {orderSummary.items.map((item, index) => (
                 <div key={index} className="order-item">
@@ -129,7 +154,9 @@ function ConfirmOrder() {
                     <span className="item-name">{item.name}</span>
                     <span className="item-quantity">Qty: {item.quantity}</span>
                   </div>
-                  <span className="item-price">₹{item.price * item.quantity}</span>
+                  <span className="item-price">
+                    ₹{item.price * item.quantity}
+                  </span>
                 </div>
               ))}
             </div>
@@ -155,8 +182,8 @@ function ConfirmOrder() {
             </div>
           </motion.div>
 
-          {/* Payment Methods */}
-          <motion.form 
+          {/* 💳 Payment Methods */}
+          <motion.form
             onSubmit={handleSubmit}
             className="payment-form"
             variants={containerVariants}
@@ -164,12 +191,14 @@ function ConfirmOrder() {
             animate="visible"
           >
             <motion.h3 variants={itemVariants}>Select Payment Method</motion.h3>
-            
+
             <div className="payment-options">
               {paymentMethods.map((method) => (
                 <motion.div
                   key={method.id}
-                  className={`payment-option ${selectedPayment === method.id ? 'selected' : ''}`}
+                  className={`payment-option ${
+                    selectedPayment === method.id ? "selected" : ""
+                  }`}
                   variants={itemVariants}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -186,7 +215,7 @@ function ConfirmOrder() {
                     <div className="radio-wrapper">
                       <div className="custom-radio">
                         {selectedPayment === method.id && (
-                          <motion.div 
+                          <motion.div
                             className="radio-dot"
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -217,7 +246,7 @@ function ConfirmOrder() {
 
             <motion.button
               type="submit"
-              className={`submit-btn ${!selectedPayment ? 'disabled' : ''}`}
+              className={`submit-btn ${!selectedPayment ? "disabled" : ""}`}
               disabled={!selectedPayment || isSubmitting}
               whileHover={selectedPayment ? { scale: 1.02 } : {}}
               whileTap={selectedPayment ? { scale: 0.98 } : {}}
@@ -233,10 +262,7 @@ function ConfirmOrder() {
               )}
             </motion.button>
 
-            <motion.div 
-              className="security-note"
-              variants={itemVariants}
-            >
+            <motion.div className="security-note" variants={itemVariants}>
               <FiShield />
               <span>Your payment information is secure and encrypted</span>
             </motion.div>

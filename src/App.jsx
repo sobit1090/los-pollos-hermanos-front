@@ -67,13 +67,18 @@ function App() {
   const [appLoading, setAppLoading] = useState(true);
 
   // Load user once on app start
-  useEffect(() => {
-    const initializeApp = async () => {
+useEffect(() => {
+  const initializeApp = async () => {
+    try {
       await dispatch(loadUser());
+    } catch (error) {
+      console.error("loadUser failed:", error);
+    } finally {
       setAppLoading(false);
-    };
-    initializeApp();
-  }, [dispatch]);
+    }
+  };
+  initializeApp();
+}, [dispatch]);
 
   // Handle global toast notifications
   useEffect(() => {
