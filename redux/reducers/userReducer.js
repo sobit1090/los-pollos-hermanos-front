@@ -20,7 +20,7 @@ export const authReducer = createReducer(initialState, (builder) => {
   state.loading = false;
   state.isAuthenticated = false;
   state.user = null;
-});
+})
 
 
     // ✅ Update profile photo (added now)
