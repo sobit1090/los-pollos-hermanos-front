@@ -503,15 +503,13 @@ const addToCart = (item) => {
  {/* Check if item is already in cart */}
 {cartItems.some((cartItem) => cartItem.id === item.id) ? (
   <div className="quantity-controls">
-    <button
-      className="qty-btn"
-      onClick={() => {dispatch({ type: "removeFromCart", payload: item });
-      dispatch({ type: "decrementItem", payload: item });
-    dispatch({ type: "calculatePrice" });
-    }}
-    >
-      -
-    </button>
+ <button
+  className="qty-btn"
+  onClick={() => dispatch({ type: "decrementItem", payload: item })}
+>
+  -
+</button>
+
 
     <span className="qty-count">
       {cartItems.find((cartItem) => cartItem.id === item.id)?.quantity}
