@@ -506,7 +506,7 @@ const addToCart = (item) => {
     <button
       className="qty-btn"
       onClick={() => {dispatch({ type: "removeFromCart", payload: item });
-      dispatch({ type: "addToCart", payload: item });
+      dispatch({ type: "decrementItem", payload: item });
     dispatch({ type: "calculatePrice" });
     }}
     >
