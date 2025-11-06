@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { IoFastFoodOutline } from "react-icons/io5"
 import { FiShoppingCart, FiLogIn } from "react-icons/fi"
 import { FaUser } from "react-icons/fa"
+import { IMAGES } from '../../constants/images'
 
 const Header = ({ isAuthenticated = false, cartItemsCount }) => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const Header = ({ isAuthenticated = false, cartItemsCount }) => {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}
         >
-  <img src="../../assets/20251031_1858_Los Pollos Logo_remix_01k8x75tg6fk69gs1818epc8q3.png" alt="Logo" className="logo-icon" />
+  <img src={IMAGES.remixLogo} alt="Logo" className="logo-icon" />
 
           <span className="logo-text">Los Pollos</span>
         </motion.div>

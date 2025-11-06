@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import me from "../../assets/LPHET_Gus.webp";
+import {IMAGES} from "../../constants/images"
 import { FiAward, FiHeart, FiUsers } from "react-icons/fi";
 
 function Founder() {
@@ -37,7 +37,7 @@ function Founder() {
       >
         <motion.div className="founder-profile" variants={itemVariants}>
           <div className="founder-image">
-            <img src={me} alt="Gustavo Fring - Founder" />
+            <img src={IMAGES.gus} alt="Gustavo Fring - Founder" />
             <div className="image-overlay"></div>
           </div>
           

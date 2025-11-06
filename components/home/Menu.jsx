@@ -1,8 +1,7 @@
 import React from "react";
 import MenuCard from "./MenuCard";
-import burger1 from "../../assets/burger1.png";
-import burger2 from "../../assets/burger2.png";
-import burger3 from "../../assets/burger3.png";
+import {IMAGES} from "../../constants/images"
+
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +19,7 @@ function Menu() {
       title: "Classic Cheese Burger",
       description: "Juicy beef patty with melted cheese and fresh veggies",
       price: 299,
-      image: burger1,
+      image:IMAGES.burger1,
       popular: true
     },
     {
@@ -28,7 +27,7 @@ function Menu() {
       title: "Veg Supreme Burger",
       description: "Fresh vegetable patty with special sauce and lettuce",
       price: 249,
-      image: burger2,
+      image:IMAGES.burger2,
       popular: false
     },
     {
@@ -36,7 +35,7 @@ function Menu() {
       title: "Premium Combo Burger",
       description: "Signature burger with french fries and special sauce",
       price: 499,
-      image: burger3,
+      image: IMAGES.burger3,
       popular: true
     }
   ];

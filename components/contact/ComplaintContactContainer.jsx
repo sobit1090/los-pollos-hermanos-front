@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ComplaintForm from "./ComplaintForm";
 import ContactForm from "./ContactForm";
 import "./complaintcomplaintContact.scss"
+import { IMAGES } from "../../constants/images";
 const ComplaintContactContainer = () => {
   const [isActive, setIsActive] = useState(false);
 
@@ -40,7 +41,7 @@ const ComplaintContactContainer = () => {
         </div>
       </div>
       <div className="burger">
-        <img src="../../assets/burger1.png" alt="" />
+        <img src={IMAGES.burger1}alt="" />
       </div>
     </div>
   );

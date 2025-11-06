@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import {IMAGES} from "../../constants/images"
 import { 
   FiAward, 
   FiHeart, 
@@ -64,19 +65,19 @@ const About = () => {
     {
      name: 'Gustavo Fring',
       role: 'Founder & Operation Manager',
-      image: '../../assets/LPHET_Gus.webp',
+      image: IMAGES.gus,
       description: 'Passionate about creating the perfect burger experience.'
     },
     {
        name: 'Walter Hartwell White',
       role: 'Chef',
-      image: '../../assets/download (1).jpeg',
+      image:IMAGES.download1,
       description: 'Ensuring everything runs smoothly behind the scenes.'
     },
     {
       name: 'Jesse Pinkman',
       role: 'Customer Experience & Co-Chef',
-      image: '../../assets/download.jpeg',
+      image: IMAGES.download,
       description: 'Dedicated to making every customer feel special.'
     }
   ];
@@ -114,7 +115,7 @@ const About = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6 }}
         >
-         <img src="../../assets/Los_Pollos_Hermanos_logo.png" alt="Logo" className="lospollos" />
+         <img src={IMAGES.losPollosLogo} alt="Logo" className="lospollos" />
 
         </motion.div>
       </motion.div>
@@ -181,7 +182,7 @@ const About = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <div className="image-placeholder">
-              <img src="../../assets/all.jpg" alt="" />
+              <img src={IMAGES.all} alt="" />
             </div>
           </motion.div>
         </div>
