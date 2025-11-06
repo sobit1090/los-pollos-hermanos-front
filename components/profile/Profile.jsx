@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
  
 import { Link } from "react-router-dom";
+import { uploadProfilePhoto } from "../../redux/actions/user";
+
 import axios from "axios";
 import toast from "react-hot-toast";
 import { server } from "../../redux/store";
@@ -90,31 +92,10 @@ const logoutHandler = async () => {
 };
 
 
-const handlePhotoChange = async (e) => {
+const handlePhotoChange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
-
-  const formData = new FormData();
-  formData.append("photo", file);
-
-  try {
-    const { data } = await axios.put(`${server}/update-photo`, formData, {
-      withCredentials: true,
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-
-    toast.success("Profile photo updated!");
-    
-    // ✅ Update UI immediately
-    dispatch({
-      type: "profileSuccess",
-      payload: { ...userDetail, photo: data.photo }
-    });
-
-  } catch (error) {
-    console.log(error);
-    toast.error("Failed to upload image");
-  }
+  dispatch(uploadProfilePhoto(file));
 };
 
 

@@ -1,6 +1,15 @@
 import axios from "axios";
 import { server } from "../store";
+export const uploadProfilePhoto = async (file) => {
+  const formData = new FormData();
+  formData.append("photo", file);
 
+  const { data } = await axios.put(`${server}/update/profile-photo`, formData, {
+    withCredentials: true,
+  });
+
+  return data.photo;
+};
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({
