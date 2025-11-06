@@ -1,6 +1,9 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-const initialState = {};
+const initialState = {
+  user: null,
+  isAuthenticated: false,
+};
 
 export const authReducer = createReducer(initialState, (builder) => {
   builder
@@ -16,7 +19,15 @@ export const authReducer = createReducer(initialState, (builder) => {
     .addCase("loadUserFail", (state, action) => {
       state.loading = false;
       state.isAuthenticated = false;
+      state.user = null;
       state.error = action.payload;
+    })
+
+    // ✅ Update profile photo (added now)
+    .addCase("updateProfilePhoto", (state, action) => {
+      if (state.user) {
+        state.user.photo = action.payload; // update photo instantly
+      }
     })
 
     // Logout
@@ -26,12 +37,11 @@ export const authReducer = createReducer(initialState, (builder) => {
     .addCase("logoutSuccess", (state, action) => {
       state.loading = false;
       state.isAuthenticated = false;
-      state.message = action.payload;
       state.user = null;
+      state.message = action.payload;
     })
     .addCase("logoutFail", (state, action) => {
       state.loading = false;
-      state.isAuthenticated = true;
       state.error = action.payload;
     })
 

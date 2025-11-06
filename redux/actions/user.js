@@ -1,14 +1,22 @@
 import axios from "axios";
 import { server } from "../store";
-export const uploadProfilePhoto = async (file) => {
-  const formData = new FormData();
-  formData.append("photo", file);
+export const uploadProfilePhoto = (file) => async (dispatch) => {
+   
+    const formData = new FormData();
+    formData.append("photo", file);
 
-  const { data } = await axios.put(`${server}/update/profile-photo`, formData, {
-    withCredentials: true,
-  });
+    const { data } = await axios.put(
+      `${server}/update/profile-photo`,
+      formData,
+      { withCredentials: true }
+    );
 
-  return data.photo;
+    // ✅ Update Redux state instantly
+    dispatch({ type: "updateProfilePhoto", payload: data.photo });
+
+    return data.photo; // ✅ Needed so component can continue
+   
+    
 };
 export const loadUser = () => async (dispatch) => {
   try {
