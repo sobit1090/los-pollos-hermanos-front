@@ -101,9 +101,7 @@ const handlePhotoChange = async (e) => {
 
     toast.success("Photo updated!");
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000); // wait so toast appears
+    
 
   } catch (err) {
     console.log("Upload failed:", err);
