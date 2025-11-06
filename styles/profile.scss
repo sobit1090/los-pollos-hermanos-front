@@ -382,3 +382,27 @@ body.profile-page .footer-nav {
     }
   }
 }
+
+
+
+.avatar-container {
+  position: relative;
+  width: 130px;
+}
+
+.upload-photo-btn {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  background: #fff;
+  border-radius: 50%;
+  padding: 6px 8px;
+  cursor: pointer;
+  border: 2px solid #eee;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.upload-photo-btn:hover {
+  background: #f5f5f5;
+}

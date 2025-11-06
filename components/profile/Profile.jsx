@@ -89,6 +89,36 @@ const logoutHandler = async () => {
   }
 };
 
+
+const handlePhotoChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append("photo", file);
+
+  try {
+    const { data } = await axios.put(`${server}/update-photo`, formData, {
+      withCredentials: true,
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    toast.success("Profile photo updated!");
+    
+    // ✅ Update UI immediately
+    dispatch({
+      type: "profileSuccess",
+      payload: { ...userDetail, photo: data.photo }
+    });
+
+  } catch (error) {
+    console.log(error);
+    toast.error("Failed to upload image");
+  }
+};
+
+
+
   return (
     <section className="profile">
       <motion.main
@@ -98,21 +128,33 @@ const logoutHandler = async () => {
       >
         {/* Profile Header */}
         <motion.div className="profile-header" variants={itemVariants}>
-          <div className="avatar-container">
-            <motion.img 
-              src={user.photo} 
-              alt="User" 
-              className="profile-avatar"
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            />
-            <motion.div 
-              className="online-indicator"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.5 }}
-            />
-          </div>
+       <div className="avatar-container">
+  <motion.img 
+    src={user.photo || "/default-user.png"} 
+    alt="User" 
+    className="profile-avatar"
+    whileHover={{ scale: 1.05 }}
+  />
+
+  {/* ✅ Upload Button */}
+  <label className="upload-photo-btn">
+    <input 
+      type="file" 
+      accept="image/*" 
+      onChange={handlePhotoChange}
+      style={{ display: "none" }}
+    />
+    📸
+  </label>
+
+  <motion.div 
+    className="online-indicator"
+    initial={{ scale: 0 }}
+    animate={{ scale: 1 }}
+    transition={{ delay: 0.5 }}
+  />
+</div>
+
           
           <motion.div className="user-info" variants={itemVariants}>
             <h1>{user.name}</h1>
