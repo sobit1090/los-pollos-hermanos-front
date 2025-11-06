@@ -95,9 +95,10 @@ const logoutHandler = async () => {
 const handlePhotoChange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
+    window.location.reload() 
   dispatch(uploadProfilePhoto(file));
   toast.success("Photo updated!");
-  window.location.reload() 
+
 };
 
 
