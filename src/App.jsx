@@ -70,15 +70,19 @@ function App() {
 useEffect(() => {
   const initializeApp = async () => {
     try {
-      await dispatch(loadUser());
+      // ✅ Only call loadUser if session exists
+      if (document.cookie.includes("connect.sid")) {
+        await dispatch(loadUser());
+      }
     } catch (error) {
       console.error("loadUser failed:", error);
     } finally {
-      setAppLoading(false);
+      setAppLoading(false); // ✅ Always stop spinner
     }
   };
   initializeApp();
 }, [dispatch]);
+
 
   // Handle global toast notifications
   useEffect(() => {

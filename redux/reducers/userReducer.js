@@ -17,11 +17,11 @@ export const authReducer = createReducer(initialState, (builder) => {
       state.user = action.payload;
     })
     .addCase("loadUserFail", (state, action) => {
-      state.loading = false;
-      state.isAuthenticated = false;
-      state.user = null;
-      state.error = action.payload;
-    })
+  state.loading = false;
+  state.isAuthenticated = false;
+  state.user = null;
+});
+
 
     // ✅ Update profile photo (added now)
     .addCase("updateProfilePhoto", (state, action) => {
