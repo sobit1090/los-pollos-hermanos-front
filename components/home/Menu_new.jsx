@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { IMAGES } from "../../constants/images";
-console.log(IMAGES)
+ 
 import {
   FiSearch,
   FiFilter,

@@ -96,6 +96,8 @@ const handlePhotoChange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
   dispatch(uploadProfilePhoto(file));
+  toast.success("Photo updated!");
+  window.location.reload() 
 };
 
 
