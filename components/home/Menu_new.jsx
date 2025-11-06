@@ -505,7 +505,7 @@ const addToCart = (item) => {
   <div className="quantity-controls">
  <button
   className="qty-btn"
-  onClick={() => dispatch({ type: "decrementItem", payload: item })}
+  onClick={() => dispatch({ type: "decrementItem", payload: item.id })}
 >
   -
 </button>
