@@ -92,14 +92,18 @@ const logoutHandler = async () => {
 };
 
 
-const handlePhotoChange = (e) => {
+const handlePhotoChange = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
-    
-  dispatch(uploadProfilePhoto(file));
-  window.location.reload() 
+
+  await dispatch(uploadProfilePhoto(file)); // wait for upload to finish
+
   toast.success("Photo updated!");
 
+  // now refresh UI
+  setTimeout(() => {
+    window.location.reload();
+  }, 400);
 };
 
 
