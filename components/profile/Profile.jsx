@@ -96,15 +96,21 @@ const handlePhotoChange = async (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  await dispatch(uploadProfilePhoto(file)); // wait for upload to finish
+  try {
+    await dispatch(uploadProfilePhoto(file));  // this was failing
 
-  toast.success("Photo updated!");
+    toast.success("Photo updated!");
 
-  // now refresh UI
-  setTimeout(() => {
-    window.location.reload();
-  }, 400);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000); // wait so toast appears
+
+  } catch (err) {
+    console.log("Upload failed:", err);
+    toast.error("Photo upload failed");
+  }
 };
+
 
 
 
