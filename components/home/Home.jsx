@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import Founder from "./Founder";
 import Menu from "./Menu";
 import FooterDescription from "./FooterDescription";
-
-
+import { Link } from "react-router-dom";
+const MotionLink = motion(Link);
 function Home() {
 
   const containerVariants = {
@@ -50,25 +50,26 @@ function Home() {
           </motion.p>
         </motion.div>
 
-        <motion.a
-          className="cta-button"
-          variants={itemVariants}
-          href="/NewMenu"
-          whileHover={{ 
-            scale: 1.05,
-            boxShadow: "0 10px 30px rgba(220, 53, 69, 0.4)"
-          }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <span>Explore Our Menu</span>
-          <motion.div 
-            className="arrow"
-            animate={{ x: [0, 5, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            ↓
-          </motion.div>
-        </motion.a>
+      <MotionLink
+  className="cta-button"
+  variants={itemVariants}
+  to="/NewMenu"
+  whileHover={{ 
+    scale: 1.05,
+    boxShadow: "0 10px 30px rgba(220, 53, 69, 0.4)"
+  }}
+  whileTap={{ scale: 0.95 }}
+>
+  <span>Explore Our Menu</span>
+
+  <motion.div 
+    className="arrow"
+    animate={{ x: [0, 5, 0] }}
+    transition={{ duration: 1.5, repeat: Infinity }}
+  >
+    ↓
+  </motion.div>
+</MotionLink>
 
         <div className="hero-stats">
           <motion.div 
