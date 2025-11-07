@@ -175,3 +175,29 @@
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .menu {
+    padding: 2rem 1rem;
+
+    .menu-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .menu-card {
+      .card-image {
+        height: 200px; // smaller, but full visible
+
+        img {
+          object-fit: contain; // 🔥 show full burger
+          background: #fff; // optional clean background
+        }
+      }
+
+      .card-content {
+        padding: 1.25rem;
+      }
+    }
+  }
+}
