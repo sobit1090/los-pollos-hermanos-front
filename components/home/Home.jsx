@@ -2,6 +2,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import Founder from "./Founder";
 import Menu from "./Menu";
+import {
+  Helmet
+} from "react-helmet"
 import FooterDescription from "./FooterDescription";
 import { Link } from "react-router-dom";
 const MotionLink = motion(Link);
@@ -31,6 +34,9 @@ function Home() {
 
   return (
     <>
+    <Helmet>
+        <title>Home | Los Pollos Hermanos</title>
+      </Helmet>
       <section className="home">
         <motion.div 
           className="hero-content"
