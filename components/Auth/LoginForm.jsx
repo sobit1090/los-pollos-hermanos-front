@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { server } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import {loadUser} from "../../redux/actions/user.js"
@@ -41,6 +42,9 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="form-box_1 login_1">
+       <Helmet>
+        <title>Login</title>
+      </Helmet>
       <form onSubmit={handleSubmit}>
         <h1>Login</h1>
 

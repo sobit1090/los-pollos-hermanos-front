@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Doughnut, Line } from "react-chartjs-2";
+import {Helmet} from "react-helmet"
 import { 
   Chart as ChartJS, 
   Tooltip, 
@@ -160,6 +161,9 @@ const Dashboard = () => {
 
   return (
     <section className="dashboard">
+      <Helmet>
+        <title>Dashboard | Admin</title>
+      </Helmet>
       {loading ? (
         <Loader />
       ) : (

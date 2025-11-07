@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { FiPlus, FiMinus, FiTrash2, FiShoppingBag } from "react-icons/fi";
@@ -90,6 +91,9 @@ useEffect(() => {
   // ✅ Render
   return (
     <section className="cart">
+       <Helmet>
+        <title>Cart</title>
+      </Helmet>
       <main>
         <div className="cart-header">
           <h1>Your Food Cart</h1>

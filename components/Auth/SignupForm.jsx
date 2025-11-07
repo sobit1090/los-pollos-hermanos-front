@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom"; // ✅ import navigate hook
 
@@ -39,6 +40,9 @@ const SignupForm = () => {
 
   return (
     <div className="form-box_1 register_1">
+       <Helmet>
+        <title>Sign Up</title>
+      </Helmet>
       <form onSubmit={handleSubmit}>
         <h1>Registration</h1>
 

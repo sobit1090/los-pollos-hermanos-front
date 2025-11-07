@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 import {
   FiCreditCard,
   FiDollarSign,
@@ -112,6 +113,9 @@ function ConfirmOrder() {
 
   return (
     <section className="confirmOrder">
+       <Helmet>
+        <title>Confirm Order</title>
+      </Helmet>
       <motion.main
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

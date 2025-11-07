@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
 import { GiArmoredBoomerang } from "react-icons/gi";
-
+import { Helmet } from "react-helmet";
 const Orders = () => {
   const orders = [
     {
@@ -77,6 +77,9 @@ const Orders = () => {
 
   return (
     <section className="tableClass">
+      <Helmet>
+        <title>Orders</title>
+      </Helmet>
       <main>
         <div className="table-header">
           <h1>Order Management</h1>

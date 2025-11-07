@@ -18,6 +18,7 @@
     FiMail,
     FiCalendar
   } from "react-icons/fi";
+  import { Helmet } from "react-helmet";
 
   const Users = () => {
     const [users, setUsers] = useState([]);
@@ -237,6 +238,9 @@
 
     return (
       <section className="tableClass">
+        <Helmet>
+        <title>Users | Admin</title>
+      </Helmet>
         <motion.main
           variants={containerVariants}
           initial="hidden"
