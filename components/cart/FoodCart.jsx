@@ -92,7 +92,7 @@ useEffect(() => {
   return (
     <section className="cart">
        <Helmet>
-        <title>Cart</title>
+        <title>Cart | Los Pollos Hermanos</title>
       </Helmet>
       <main>
         <div className="cart-header">
