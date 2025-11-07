@@ -28,7 +28,7 @@ import Users from "../components/admin/Users";
 import About from "../components/home/About";
 import MenuNew from "../components/home/Menu_new";
 import LoadingSpinner from "../components/layout/LoadingSpinner";
- import ProfileWrapper from "./components/profile/ProfileWrapper";
+ import ProfileWrapper from ".././components/profile/ProfileWrapper";
 // Styles
 import "../styles/app.scss";
 import "../styles/header.scss";
