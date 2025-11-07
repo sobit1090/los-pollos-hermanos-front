@@ -75,7 +75,7 @@ const handleSubmit = async (e) => {
         <p>or login with social platforms</p>
 
         <div className="social-icons_1">
-          <a onClick={loginHandler}><i className="bx bxl-google"></i></a>
+          <a className="googlepointer" onClick={loginHandler}><i className="bx bxl-google"></i></a>
           <a href="#"><i className="bx bxl-github"></i></a>
           <a href="#"><i className="bx bxl-linkedin"></i></a>
         </div>
