@@ -1,17 +1,43 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FiStar } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
 
-function MenuCard({ item, index, handler }) {
+function MenuCard({ item, index }) {
+  const dispatch = useDispatch();
+  const { cartItems = [] } = useSelector((state) => state.cart || {});
+
+  const cartItem = cartItems.find((cartItem) => cartItem.id === item.id);
+
+  const addToCart = () => {
+    dispatch({
+      type: "addToCart",
+      payload: {
+        id: item.id,
+        name: item.title,
+        price: item.price,
+        image: item.image,
+      },
+    });
+    dispatch({ type: "calculatePrice" });
+  };
+
+  const increment = () => {
+    dispatch({ type: "addToCart", payload: item });
+    dispatch({ type: "calculatePrice" });
+  };
+
+  const decrement = () => {
+    dispatch({ type: "decrementItem", payload: item.id });
+    dispatch({ type: "calculatePrice" });
+  };
+
   const cardVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.6,
-        delay: index * 0.1
-      }
+      transition: { duration: 0.6, delay: index * 0.1 }
     },
     hover: {
       y: -10,
@@ -45,14 +71,24 @@ function MenuCard({ item, index, handler }) {
         
         <div className="card-footer">
           <span className="price">₹{item.price}</span>
-          <motion.button 
-            onClick={() => handler(item)}
-            className="add-to-cart-btn"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Add to Cart
-          </motion.button>
+
+          {/* ✅ If item is already in cart show + / - */}
+          {cartItem ? (
+            <div className="quantity-controls">
+              <button className="qty-btn" onClick={decrement}>-</button>
+              <span className="qty-count">{cartItem.quantity}</span>
+              <button className="qty-btn" onClick={increment}>+</button>
+            </div>
+          ) : (
+            <motion.button 
+              onClick={addToCart}
+              className="add-to-cart-btn"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Add to Cart
+            </motion.button>
+          )}
         </div>
       </div>
     </motion.div>
