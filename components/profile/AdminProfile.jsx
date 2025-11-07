@@ -190,8 +190,8 @@ const handlePhotoChange = async (e) => {
                 <MdShoppingBag />
               </div>
               <div className="action-content">
-                <h3>My Orders</h3>
-                <p>View order history</p>
+                <h3> Orders</h3>
+                <p>View orders history</p>
               </div>
             </Link>
 
@@ -200,7 +200,7 @@ const handlePhotoChange = async (e) => {
                 <MdSettings />
               </div>
               <div className="action-content">
-                <h3>Settings</h3>
+                <h3>Complaints</h3>
                 <p>Account preferences</p>
               </div>
             </Link>
@@ -210,8 +210,8 @@ const handlePhotoChange = async (e) => {
                 <MdPerson />
               </div>
               <div className="action-content">
-                <h3>Edit Profile</h3>
-                <p>Update your information</p>
+                <h3>Users</h3>
+                <p>See Active Users</p>
               </div>
             </Link>
           </div>
