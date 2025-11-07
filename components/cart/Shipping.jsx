@@ -127,6 +127,9 @@ const Shipping = () => {
 
   return (
     <section className="shipping">
+      <Helmet>
+        <title>Shipping | Los Pollos Hermanos</title>
+      </Helmet>
       <motion.main
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

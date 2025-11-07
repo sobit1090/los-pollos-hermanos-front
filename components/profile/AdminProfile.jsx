@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
  
 import { motion } from "framer-motion";
- 
+  import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { uploadProfilePhoto } from "../../redux/actions/user";
 
@@ -114,6 +114,9 @@ const handlePhotoChange = async (e) => {
 
   return (
     <section className="profile">
+      <Helmet>
+        <title>Admin Profile | Los Pollos Hermanos</title>
+      </Helmet>
       <motion.main
         variants={containerVariants}
         initial="hidden"

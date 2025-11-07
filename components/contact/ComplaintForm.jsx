@@ -1,8 +1,12 @@
 import React from "react";
+ import { Helmet } from "react-helmet";
 
 const ComplaintForm = () => {
   return (
     <div className="form-box_2 complaint_2">
+      <Helmet>
+              <title>Contact | Los Pollos Hermanos</title>
+            </Helmet>
       <form>
         <h1>Complaint</h1>
 

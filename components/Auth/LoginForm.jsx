@@ -43,7 +43,7 @@ const handleSubmit = async (e) => {
   return (
     <div className="form-box_1 login_1">
        <Helmet>
-        <title>Login</title>
+        <title>Login | Los Pollos Hermanos</title>
       </Helmet>
       <form onSubmit={handleSubmit}>
         <h1>Login</h1>

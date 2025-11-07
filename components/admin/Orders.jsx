@@ -78,7 +78,7 @@ const Orders = () => {
   return (
     <section className="tableClass">
       <Helmet>
-        <title>Orders</title>
+        <title>Orders | Los Pollos Hermanos</title>
       </Helmet>
       <main>
         <div className="table-header">

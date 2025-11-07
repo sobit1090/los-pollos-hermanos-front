@@ -87,6 +87,9 @@ const Services = () => {
 
   return (
     <section className="services-page">
+      <Helmet>
+        <title>Choose Service | Los Pollos Hermanos</title>
+      </Helmet>
       {/* Header */}
       <motion.div 
         className="services-header"

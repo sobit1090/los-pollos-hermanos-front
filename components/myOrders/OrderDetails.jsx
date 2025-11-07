@@ -1,5 +1,6 @@
 import React from "react";
 import "../../styles/footer.scss"
+ import { Helmet } from "react-helmet";
 const OrderDetails = () => {
   const orderData = {
     shipping: {
@@ -65,6 +66,9 @@ const OrderDetails = () => {
 
   return (
     <section className="orderDetails">
+        <Helmet>
+        <title>OderDetails | Los Pollos Hermanos</title>
+      </Helmet>
       <main>
         <div className="order-header">
           <h1>Order Details</h1>

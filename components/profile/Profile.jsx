@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
- 
+ import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
  
 import { Link } from "react-router-dom";
@@ -114,6 +114,9 @@ const handlePhotoChange = async (e) => {
 
   return (
     <section className="profile">
+      <Helmet>
+        <title>User Profile | Los Pollos Hermanos</title>
+      </Helmet>
       <motion.main
         variants={containerVariants}
         initial="hidden"

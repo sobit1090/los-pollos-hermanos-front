@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+ import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { IMAGES } from "../../constants/images";
@@ -313,6 +314,9 @@ const addToCart = (item) => {
 
   return (
     <section className="menu-page">
+      <Helmet>
+        <title>Menu | Los Pollos Hermanos</title>
+      </Helmet>
       <motion.div
         className="menu-header"
         initial={{ opacity: 0, y: -50 }}

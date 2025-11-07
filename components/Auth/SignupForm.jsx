@@ -41,7 +41,7 @@ const SignupForm = () => {
   return (
     <div className="form-box_1 register_1">
        <Helmet>
-        <title>Sign Up</title>
+        <title>Login | Los Pollos Hermanos</title>
       </Helmet>
       <form onSubmit={handleSubmit}>
         <h1>Registration</h1>

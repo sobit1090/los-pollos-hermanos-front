@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import {IMAGES} from "../../constants/images"
+ import { Helmet } from "react-helmet";
 import { 
   FiAward, 
   FiHeart, 
@@ -84,6 +85,9 @@ const About = () => {
 
   return (
     <section className="about">
+      <Helmet>
+        <title>About | Los Pollos Hermanos</title>
+      </Helmet>
       {/* Hero Section */}
       <motion.div 
         className="about-hero"

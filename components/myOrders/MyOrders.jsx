@@ -1,4 +1,5 @@
 import React from "react";
+ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
 import "../../styles/footer.scss"
@@ -7,6 +8,9 @@ const MyOrders = () => {
 
   return (
     <section className="tableClass">
+        <Helmet>
+        <title>My Orders | Los Pollos Hermanos</title>
+      </Helmet>
       <main>
         <table>
           <thead>
