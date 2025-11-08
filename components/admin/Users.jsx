@@ -1,6 +1,7 @@
   import React, { useEffect, useState } from "react";
   import { motion } from "framer-motion";
   import axios from "axios";
+  import { toast } from "sonner@2.0.3";
 import { server } from "../../redux/store";
 
   import { 
@@ -9,6 +10,7 @@ import { server } from "../../redux/store";
     MdAdd,
     MdEdit,
     MdDelete,
+    MdWarning,
     MdBlock,
     MdCheckCircle,
     MdRefresh,
@@ -28,6 +30,7 @@ import { server } from "../../redux/store";
     const [searchTerm, setSearchTerm] = useState("");
     const [roleFilter, setRoleFilter] = useState("all");
     const [statusFilter, setStatusFilter] = useState("all");
+      const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [loading, setLoading] = useState(true);
 
     // Mock data - replace with actual API call
@@ -162,17 +165,19 @@ const formatDate = (dateString) => {
 };
 
 // Delete user from DB + UI
-const handleDeleteUser = async (userId) => {
-   
-
-  try {
-    console.log(`${server}/admin/users/${userId}`)
-    await axios.delete(`${server}/admin/users/${userId}`, { withCredentials: true });
-    setUsers(users.filter(user => user._id !== userId)); // ✅ update list
-  } catch (error) {
-    console.log(error);
-  }
-};
+  const handleDeleteUser = async (userId ) => {
+    try {
+      await axios.delete(`${server}/admin/users/${userId}`, { 
+        withCredentials: true 
+      });
+      setUsers(users.filter(user => user._id !== userId));
+      setDeleteConfirm(null);
+      toast.success("User deleted successfully");
+    } catch (error ) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to delete user");
+    }
+  };
 
 // Suspend / Activate user
 const handleToggleStatus = async (userId, currentStatus) => {
@@ -455,14 +460,49 @@ const itemVariants = {
           {user.status === 'Active' ? <MdBlock /> : <MdCheckCircle />}
         </button>
 
-        <button 
-          className="btn-delete"
-          title="Delete User"
- 
-          onClick={() => handleDeleteUser(user._id)}  
-        >
-          <MdDelete  onClick={() => handleDeleteUser(user._id)}   />
-        </button>
+         <AnimatePresence>
+        {deleteConfirm && (
+          <motion.div 
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setDeleteConfirm(null)}
+          >
+            <motion.div 
+              className="modal-content delete-modal"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="modal-icon">
+                <MdWarning />
+              </div>
+              <h3>Delete User?</h3>
+              <p>
+                Are you sure you want to delete this user? 
+                This action cannot be undone.
+              </p>
+              <div className="modal-actions">
+                <button 
+                  className="btn-secondary"
+                  onClick={() => setDeleteConfirm(null)}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="btn-danger"
+                  onClick={() => handleDeleteUser(deleteConfirm)}
+                >
+                  <MdDelete />
+                  Delete User
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       </div>
     </div>
