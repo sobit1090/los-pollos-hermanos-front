@@ -188,7 +188,7 @@ const handlePhotoChange = async (e) => {
       </Link>
  
 
-            <Link to="/myorders" className="action-card success">
+            <Link to="/admin/orders" className="action-card success">
               <div className="action-icon">
                 <MdShoppingBag />
               </div>
@@ -208,7 +208,7 @@ const handlePhotoChange = async (e) => {
               </div>
             </Link>
 
-            <Link to="/profile/edit" className="action-card info">
+            <Link to="/admin/users" className="action-card info">
               <div className="action-icon">
                 <MdPerson />
               </div>

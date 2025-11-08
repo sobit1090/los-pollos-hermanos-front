@@ -422,15 +422,15 @@ const itemVariants = {
     <div className="cell" data-label="Member Since">
       <span className="join-date">
         <MdCalendarToday className="date-icon" />
--       {formatDate(user.since)}
-+       {formatDate(user.createdAt)}    
+
+       {formatDate(user.createdAt)}    
       </span>
     </div>
 
     <div className="cell" data-label="Last Active">
       <span className="last-active">
--       {formatDate(user.lastActive)}
-+       {user.lastActive ? formatDate(user.lastActive) : "—"} 
+
+       {user.lastActive ? formatDate(user.lastActive) : "—"} 
       </span>
     </div>
 
