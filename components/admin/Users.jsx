@@ -1,7 +1,8 @@
   import React, { useEffect, useState } from "react";
   import { motion } from "framer-motion";
   import axios from "axios";
-  import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
+
 import { server } from "../../redux/store";
 
   import { 
