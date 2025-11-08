@@ -166,6 +166,7 @@ const handleDeleteUser = async (userId) => {
    
 
   try {
+    console.log(`${server}/admin/users/${userId}`)
     await axios.delete(`${server}/admin/users/${userId}`, { withCredentials: true });
     setUsers(users.filter(user => user._id !== userId)); // ✅ update list
   } catch (error) {
@@ -460,7 +461,7 @@ const itemVariants = {
  
           onClick={() => handleDeleteUser(user._id)}  
         >
-          <MdDelete />
+          <MdDelete  onClick={() => handleDeleteUser(user._id)}   />
         </button>
 
       </div>
