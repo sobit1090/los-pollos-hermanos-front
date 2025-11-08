@@ -163,10 +163,10 @@ const formatDate = (dateString) => {
 
 // Delete user from DB + UI
 const handleDeleteUser = async (userId) => {
-  if (!window.confirm('Are you sure you want to delete this user?')) return;
+   
 
   try {
-    await axios.delete(`${server}/api/admin/users/${userId}`, { withCredentials: true });
+    await axios.delete(`${server}/admin/users/${userId}`, { withCredentials: true });
     setUsers(users.filter(user => user._id !== userId)); // ✅ update list
   } catch (error) {
     console.log(error);
