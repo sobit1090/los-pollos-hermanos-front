@@ -177,7 +177,7 @@ const handleDeleteUser = async (userId) => {
 const handleToggleStatus = async (userId, currentStatus) => {
   try {
     const { data } = await axios.put(
-      `${server}/api/admin/users/${userId}/toggle`,
+      `${server}/admin/users/${userId}/toggle`,
       {},
       { withCredentials: true }
     );
