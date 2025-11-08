@@ -28,102 +28,76 @@
     const [loading, setLoading] = useState(true);
 
     // Mock data - replace with actual API call
-    const mockUsers = [
-      {
-        id: "USR001",
-        name: "Abhi Sharma",
-        photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-        role: "Admin",
-        since: "2023-03-24",
-        email: "abhi@example.com",
-        status: "Active",
-        lastActive: "2024-01-15"
-      },
-      {
-        id: "USR002",
-        name: "Shobhit Kumar",
-        photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-        role: "User",
-        since: "2022-05-12",
-        email: "shobhit@example.com",
-        status: "Active",
-        lastActive: "2024-01-14"
-      },
-      {
-        id: "USR003",
-        name: "Rahul Verma",
-        photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=150&h=150&fit=crop&crop=face",
-        role: "Moderator",
-        since: "2023-01-01",
-        email: "rahul@example.com",
-        status: "Inactive",
-        lastActive: "2023-12-20"
-      },
-      {
-        id: "USR004",
-        name: "Sneha Patel",
-        photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-        role: "Admin",
-        since: "2023-07-15",
-        email: "sneha@example.com",
-        status: "Active",
-        lastActive: "2024-01-15"
-      },
-      {
-        id: "USR005",
-        name: "Priya Singh",
-        photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-        role: "User",
-        since: "2023-11-08",
-        email: "priya@example.com",
-        status: "Active",
-        lastActive: "2024-01-13"
-      },
-      {
-        id: "USR006",
-        name: "Amit Joshi",
-        photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
-        role: "User",
-        since: "2023-09-22",
-        email: "amit@example.com",
-        status: "Suspended",
-        lastActive: "2024-01-10"
-      }
-    ];
+    // const mockUsers = [
+    //   {
+    //     id: "USR001",
+    //     name: "Abhi Sharma",
+    //     photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    //     role: "Admin",
+    //     since: "2023-03-24",
+    //     email: "abhi@example.com",
+    //     status: "Active",
+    //     lastActive: "2024-01-15"
+    //   },
+    //   {
+    //     id: "USR002",
+    //     name: "Shobhit Kumar",
+    //     photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    //     role: "User",
+    //     since: "2022-05-12",
+    //     email: "shobhit@example.com",
+    //     status: "Active",
+    //     lastActive: "2024-01-14"
+    //   },
+    //   {
+    //     id: "USR003",
+    //     name: "Rahul Verma",
+    //     photo: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?w=150&h=150&fit=crop&crop=face",
+    //     role: "Moderator",
+    //     since: "2023-01-01",
+    //     email: "rahul@example.com",
+    //     status: "Inactive",
+    //     lastActive: "2023-12-20"
+    //   },
+    //   {
+    //     id: "USR004",
+    //     name: "Sneha Patel",
+    //     photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    //     role: "Admin",
+    //     since: "2023-07-15",
+    //     email: "sneha@example.com",
+    //     status: "Active",
+    //     lastActive: "2024-01-15"
+    //   },
+    //   {
+    //     id: "USR005",
+    //     name: "Priya Singh",
+    //     photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    //     role: "User",
+    //     since: "2023-11-08",
+    //     email: "priya@example.com",
+    //     status: "Active",
+    //     lastActive: "2024-01-13"
+    //   },
+    //   {
+    //     id: "USR006",
+    //     name: "Amit Joshi",
+    //     photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+    //     role: "User",
+    //     since: "2023-09-22",
+    //     email: "amit@example.com",
+    //     status: "Suspended",
+    //     lastActive: "2024-01-10"
+    //   }
+    // ];
 
-    useEffect(() => {
-      document.body.classList.add('users-page');
-      
-      // Simulate API call
-      const fetchUsers = async () => {
-        setLoading(true);
-        try {
-          // Replace with actual API call
-          // const response = await axios.get('/api/v1/admin/users');
-          // setUsers(response.data.users);
-          
-          setTimeout(() => {
-            setUsers(mockUsers);
-            setLoading(false);
-          }, 1000);
-        } catch (error) {
-          console.error('Error fetching users:', error);
-          setLoading(false);
-        }
-      };
-
-      fetchUsers();
-
-      return () => {
-        document.body.classList.remove('users-page');
-      };
-    }, []);
+  const fetchUsers = async () => {
 
     // Filter users based on search and filters
     const filteredUsers = users.filter(user => {
       const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          user.id.toLowerCase().includes(searchTerm.toLowerCase());
+                          user._id.toLowerCase().includes(searchTerm.toLowerCase());
       
       const matchesRole = roleFilter === "all" || user.role.toLowerCase() === roleFilter;
       const matchesStatus = statusFilter === "all" || user.status.toLowerCase() === statusFilter;
@@ -170,22 +144,23 @@
       // Implement edit functionality
     };
 
-    const handleDeleteUser = (userId) => {
-      if (window.confirm('Are you sure you want to delete this user?')) {
-        console.log('Delete user:', userId);
-        // Implement delete functionality
-        setUsers(users.filter(user => user.id !== userId));
-      }
-    };
+ const handleDeleteUser = async (userId) => {
+  if (!window.confirm("Delete this user?")) return;
 
-    const handleToggleStatus = (userId, currentStatus) => {
-      const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
-      console.log(`Toggle user ${userId} status to:`, newStatus);
-      
-      setUsers(users.map(user => 
-        user.id === userId ? { ...user, status: newStatus } : user
-      ));
-    };
+  await axios.delete(`${server}/api/admin/users/${userId}`, { withCredentials: true });
+
+  setUsers(users.filter((u) => u._id !== userId)); // Note: use _id not id
+};
+
+
+    const handleToggleStatus = async (userId, currentStatus) => {
+  const { data } = await axios.put(`${server}/api/admin/users/${userId}/toggle`, {}, { withCredentials: true });
+
+  setUsers(users.map((user) =>
+    user._id === userId ? { ...user, status: data.status } : user
+  ));
+};
+
 
     const handleRefresh = () => {
       setLoading(true);
@@ -376,14 +351,14 @@
             {filteredUsers.map((user, index) => (
               <motion.div 
                 className="tableRow" 
-                key={user.id}
+                key={user._id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="cell" data-label="User ID">
                   <div className="user-id">
-                    {user.id}
+                    {user._id}
                   </div>
                 </div>
                 <div className="cell" data-label="User Info">
@@ -431,21 +406,21 @@
                     <button 
                       className="btn-edit"
                       title="Edit User"
-                      onClick={() => handleEditUser(user.id)}
+                      onClick={() => handleEditUser(user._id)}
                     >
                       <MdEdit />
                     </button>
                     <button 
                       className={`btn-status ${user.status === 'Active' ? 'btn-inactive' : 'btn-active'}`}
                       title={user.status === 'Active' ? 'Deactivate User' : 'Activate User'}
-                      onClick={() => handleToggleStatus(user.id, user.status)}
+                      onClick={() => handleToggleStatus(user._id, user.status)}
                     >
                       {user.status === 'Active' ? <MdBlock /> : <MdCheckCircle />}
                     </button>
                     <button 
                       className="btn-delete"
                       title="Delete User"
-                      onClick={() => handleDeleteUser(user.id)}
+                      onClick={() => handleDeleteUser(user._id)}
                     >
                       <MdDelete />
                     </button>

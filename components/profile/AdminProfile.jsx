@@ -31,12 +31,25 @@ const AdminProfile = () => {
   const userDetail = authState.user || userState.user || userState.data || {};
 
   
-  useEffect(() => {
-    document.body.classList.add('profile-page');
-    return () => {
-      document.body.classList.remove('profile-page');
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.body.classList.add('profile-page');
+  //   return () => {
+  //     document.body.classList.remove('profile-page');
+  //   };
+  // }, []);
+useEffect(() => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(`${server}/api/admin/users`, { withCredentials: true });
+      setUsers(data.users);
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  };
+
+  fetchUsers();
+}, []);
 
   const containerVariants = {
     hidden: { opacity: 0 },
