@@ -378,7 +378,7 @@ const itemVariants = {
   <motion.div 
     className="tableRow" 
 
-  key={user._id}            // ✅ MongoDB uses _id
+  key={user._id}            
     initial={{ opacity: 0, x: -20 }}
     animate={{ opacity: 1, x: 0 }}
     transition={{ delay: index * 0.1 }}
@@ -386,7 +386,7 @@ const itemVariants = {
     <div className="cell" data-label="User ID">
       <div className="user-id">
       
-        {user._id}            // ✅ Show MongoDB ID
+        {user._id.slice(-5)} {/* ✅ Show last 5 digits */}           
       </div>
     </div>
 
@@ -423,14 +423,14 @@ const itemVariants = {
       <span className="join-date">
         <MdCalendarToday className="date-icon" />
 -       {formatDate(user.since)}
-+       {formatDate(user.createdAt)}   // ✅ correct field from DB
++       {formatDate(user.createdAt)}    
       </span>
     </div>
 
     <div className="cell" data-label="Last Active">
       <span className="last-active">
 -       {formatDate(user.lastActive)}
-+       {user.lastActive ? formatDate(user.lastActive) : "—"} // ✅ prevent crash
++       {user.lastActive ? formatDate(user.lastActive) : "—"} 
       </span>
     </div>
 
@@ -440,7 +440,7 @@ const itemVariants = {
         <button 
           className="btn-edit"
           title="Edit User"
-     // ✅ fix
+ 
         >
           <MdEdit />
         </button>
@@ -449,7 +449,7 @@ const itemVariants = {
           className={`btn-status ${user.status === 'Active' ? 'btn-inactive' : 'btn-active'}`}
           title={user.status === 'Active' ? 'Deactivate User' : 'Activate User'}
          
-         onClick={() => handleToggleStatus(user._id, user.status)} // ✅ fix
+         onClick={() => handleToggleStatus(user._id, user.status)} 
         >
           {user.status === 'Active' ? <MdBlock /> : <MdCheckCircle />}
         </button>
@@ -458,7 +458,7 @@ const itemVariants = {
           className="btn-delete"
           title="Delete User"
  
-          onClick={() => handleDeleteUser(user._id)} // ✅ fix
+          onClick={() => handleDeleteUser(user._id)}  
         >
           <MdDelete />
         </button>
