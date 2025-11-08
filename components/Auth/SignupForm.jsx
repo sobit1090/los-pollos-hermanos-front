@@ -3,7 +3,7 @@ import axios from "axios";
 import { Helmet } from "react-helmet";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom"; // ✅ import navigate hook
-
+import { server } from "../../redux/store";
 const SignupForm = () => {
   const navigate = useNavigate(); // ✅ initialize navigate
 
@@ -37,7 +37,9 @@ const SignupForm = () => {
       toast.error(error.response?.data?.message || "Registration failed");
     }
   };
-
+  const loginHandler = () => {
+    window.open(`${server}/googlelogin`, "_self");
+  };
   return (
     <div className="form-box_1 register_1">
        <Helmet>
@@ -86,7 +88,7 @@ const SignupForm = () => {
         <p>or register with social platforms</p>
 
         <div className="social-icons_1">
-          <a href="#"><i className="bx bxl-google"></i></a>
+       <a className="googlepointer" onClick={loginHandler}><i className="bx bxl-google"></i></a>
           <a href="#"><i className="bx bxl-facebook"></i></a>
           <a href="#"><i className="bx bxl-github"></i></a>
           <a href="#"><i className="bx bxl-linkedin"></i></a>
