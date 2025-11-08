@@ -202,7 +202,7 @@ const handleRefresh = () => {
 const stats = {
   total: users.length,
   active: users.filter(user => user.status === 'Active').length,
-  admins: users.filter(user => user.role === 'Admin').length,
+  admins: users.filter(user => user.role === 'admin').length,
   inactive: users.filter(user => user.status === 'Inactive').length
 };
 
