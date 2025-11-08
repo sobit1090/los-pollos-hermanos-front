@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
- import { useState } from "react";
+ 
 import { motion } from "framer-motion";
   import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -22,48 +22,59 @@ import { useDispatch, useSelector } from "react-redux";
 import {logout} from "../../redux/actions/user"
 
 const AdminProfile = () => {
-    const dispatch = useDispatch();
+    
   // Try different Redux state locations
   const authState = useSelector((state) => state.auth);
   const userState = useSelector((state) => state.user);
   
   // Get user from different possible locations
   const userDetail = authState.user || userState.user || userState.data || {};
-  const [loading, setLoading] = useState(false);
-  const [users, setUsers] = useState([]);
 
+  
   useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true);
-      try {
-        const { data } = await axios.get(`${server}/api/admin/users`, { withCredentials: true });
-        setUsers(data.users);
-      } catch (error) {
-        console.log(error);
-      }
-      setLoading(false);
+    document.body.classList.add('profile-page');
+    return () => {
+      document.body.classList.remove('profile-page');
     };
-
-    fetchUsers();
   }, []);
-    const user = {
-    name: userDetail.name || "Name",
-    email: userDetail.email || "abc@example.com",
-    joinDate: userDetail.createdAt 
-      ? new Date(userDetail.createdAt).toLocaleDateString('en-US', { 
-          month: 'long', 
-          year: 'numeric' 
-        })
-      : "March 2023",
-    photo: userDetail.photo,
-    orders: userDetail.orders || 0,
-    role: userDetail.role,
-  };
-  const totalUsers = users.length;
-const activeUsers = users.filter(u => u.status === "Active").length;
-const suspendedUsers = users.filter(u => u.status === "Suspended").length;
 
-  const logoutHandler = async () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const user = {
+    name: userDetail.name|| "Name",
+    email: userDetail.email||"abc@example.com",
+    joinDate: userDetail.createdAt 
+    ? new Date(userDetail.createdAt).toLocaleDateString('en-US', { 
+        month: 'long', 
+        year: 'numeric' 
+      })
+    : "March 2023",
+    photo: userDetail.photo,
+    orders: userDetail.orders|| 0,
+    role: userDetail.role ,
+  };
+  const dispatch=useDispatch();
+const logoutHandler = async () => {
   try {
     await axios.get(`${server}/logout`, { withCredentials: true });
 
@@ -97,36 +108,6 @@ const handlePhotoChange = async (e) => {
     toast.error("Photo upload failed");
   }
 };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  };
-  // useEffect(() => {
-  //   document.body.classList.add('profile-page');
-  //   return () => {
-  //     document.body.classList.remove('profile-page');
-  //   };
-  // }, []);
-
-  
 
 
 
@@ -193,28 +174,6 @@ const handlePhotoChange = async (e) => {
         {/* Quick Actions */}
         <motion.div className="quick-actions" variants={itemVariants}>
           <h2>Quick Actions</h2>
-          <motion.div className="stats-users" variants={itemVariants}>
-  <h2>System Overview</h2>
-  <div className="stats-grid">
-
-    <div className="stat-card">
-      <h3>{totalUsers}</h3>
-      <p>Total Users</p>
-    </div>
-
-    <div className="stat-card">
-      <h3>{activeUsers}</h3>
-      <p>Active Users</p>
-    </div>
-
-    <div className="stat-card">
-      <h3>{suspendedUsers}</h3>
-      <p>Suspended Users</p>
-    </div>
-
-  </div>
-</motion.div>
-
           <div className="actions-grid">
 
         
