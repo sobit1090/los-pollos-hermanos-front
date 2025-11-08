@@ -505,6 +505,13 @@ const itemVariants = {
           </motion.div>
         )}
       </AnimatePresence>
+<button 
+  className="btn-delete"
+  title="Delete User"
+  onClick={() => setDeleteConfirm(user._id)}
+>
+  <MdDelete />
+</button>
 
       </div>
     </div>
