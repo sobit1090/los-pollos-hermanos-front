@@ -989,35 +989,35 @@ $transition-fast: all 0.15s ease-in-out;
   }
 }
 
-// Role Badges
-.role-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  text-transform: capitalize;
-  transition: $transition;
+// // Role Badges
+// .role-badge {
+//   display: inline-flex;
+//   align-items: center;
+//   padding: 0.5rem 1rem;
+//   border-radius: 9999px;
+//   font-size: 0.8125rem;
+//   font-weight: 600;
+//   text-transform: capitalize;
+//   transition: $transition;
 
-  &.admin {
-    background: rgba($danger-color, 0.1);
-    color: $danger-color;
-    border: 1px solid rgba($danger-color, 0.2);
-  }
+//   &.admin {
+//     background: rgba($danger-color, 0.1);
+//     color: $danger-color;
+//     border: 1px solid rgba($danger-color, 0.2);
+//   }
 
-  &.moderator {
-    background: rgba(#8b5cf6, 0.1);
-    color: #8b5cf6;
-    border: 1px solid rgba(#8b5cf6, 0.2);
-  }
+//   &.moderator {
+//     background: rgba(#8b5cf6, 0.1);
+//     color: #8b5cf6;
+//     border: 1px solid rgba(#8b5cf6, 0.2);
+//   }
 
-  &.user {
-    background: rgba($info-color, 0.1);
-    color: $info-color;
-    border: 1px solid rgba($info-color, 0.2);
-  }
-}
+//   &.user {
+//     background: rgba($info-color, 0.1);
+//     color: $info-color;
+//     border: 1px solid rgba($info-color, 0.2);
+//   }
+// }
 
 // Status Badges
 .status-badge {
