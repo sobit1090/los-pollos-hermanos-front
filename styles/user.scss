@@ -1331,26 +1331,7 @@ $transition-fast: all 0.15s ease-in-out;
   }
 }
 
-// Scrollbar Styling
-.table-container {
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: $bg-color;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: $border-color;
-    border-radius: 4px;
-
-    &:hover {
-      background: $secondary-color;
-    }
-  }
-}
+ 
 
 // Responsive adjustments
 @media (max-width: 480px) {
