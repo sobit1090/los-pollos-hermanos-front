@@ -98,6 +98,39 @@ import { server } from "../../redux/store";
     //     lastActive: "2024-01-10"
     //   }
     // ];
+    const [showAddUserModal, setShowAddUserModal] = useState(false);
+
+const [newUser, setNewUser] = useState({
+  name: "",
+  email: "",
+  password: "",
+  role: "user",
+  photo: null,
+});
+
+const [previewImage, setPreviewImage] = useState(null);
+const [errors, setErrors] = useState({});
+
+    const AddNewUserHandler = () => {
+  setShowAddUserModal(true);
+};
+
+const closeAddUserModal = () => {
+  setShowAddUserModal(false);
+  setPreviewImage(null);
+  setErrors({});
+  setNewUser({
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
+    photo: null,
+  });
+};
+
+const handleInputChange = (e) => {
+  setNewUser({ ...newUser, [e.target.name]: e.target.value });
+};
 
  useEffect(() => {
   const fetchUsers = async () => {
@@ -112,6 +145,59 @@ import { server } from "../../redux/store";
 
   fetchUsers();
 }, []);
+const handleImageUpload = (e) => {
+  const file = e.target.files[0];
+
+  if (file) {
+    setNewUser({ ...newUser, photo: file });
+
+    // preview image
+    const imageURL = URL.createObjectURL(file);
+    setPreviewImage(imageURL);
+  }
+};
+
+const submitAddUser = async () => {
+  if (!validateFields()) return;
+
+  try {
+    const formData = new FormData();
+    formData.append("name", newUser.name);
+    formData.append("email", newUser.email);
+    formData.append("password", newUser.password);
+    formData.append("role", newUser.role);
+    formData.append("photo", newUser.photo);
+
+    const { data } = await axios.post(`${server}/admin/register/addnewuser`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      withCredentials: true,
+    });
+
+    alert("User added successfully!");
+    closeAddUserModal();
+  } catch (error) {
+    console.log(error);
+    alert("Error adding user");
+  }
+};
+const validateFields = () => {
+  let tempErrors = {};
+
+  if (!newUser.name.trim()) tempErrors.name = "Name is required";
+  if (!newUser.email.trim()) tempErrors.email = "Email is required";
+  else if (!/\S+@\S+\.\S+/.test(newUser.email))
+    tempErrors.email = "Invalid email format";
+
+  if (!newUser.password.trim()) tempErrors.password = "Password is required";
+  if (newUser.password.length < 6)
+    tempErrors.password = "Password must be at least 6 characters";
+
+  if (!newUser.role) tempErrors.role = "Role selection required";
+
+  setErrors(tempErrors);
+
+  return Object.keys(tempErrors).length === 0;
+};
 
 // Filter users based on search and filters
 const filteredUsers = users.filter(user => {
@@ -197,15 +283,9 @@ const handleToggleStatus = async (userId, currentStatus) => {
     console.log(error);
   }
 };
-//add new user
-const [AddNewUser,setAddNewUSer]=useState(false)
-const AddNewUserHandler=()=>{
- setAddNewUSer(true)
-}
+ 
 
-const CloseAddNewUserHandler=()=>{
- setAddNewUSer(false)
-}
+ 
 // Refresh (re-fetch)
 const handleRefresh = () => {
   setLoading(true);
@@ -282,55 +362,96 @@ const itemVariants = {
 
 
 
-
-
-
-{AddNewUser && (
+ {showAddUserModal && (
   <div className="modal-overlay">
     <div className="modal-content add-user-modal">
 
-      <button className="modal-close-btn" onClick={CloseAddNewUserHandler}>✕</button>
+      <button className="modal-close-btn" onClick={closeAddUserModal}>✕</button>
 
       <h3>Add New User</h3>
-      <p>Fill the details to create a new user</p>
+      <p>Fill the form to create a new user</p>
 
       <div className="add-user-body">
 
-        {/* PHOTO UPLOAD */}
+        {/* IMAGE UPLOAD */}
         <div className="photo-upload">
-          <label htmlFor="userPhoto" className="photo-label">
-            <span>+</span>
-          </label>
-          <input type="file" id="userPhoto" accept="image/*" />
+          {previewImage ? (
+            <label htmlFor="userPhoto" className="photo-preview">
+              <img src={previewImage} alt="Preview" />
+            </label>
+          ) : (
+            <label htmlFor="userPhoto" className="photo-label">
+              <span>+</span>
+            </label>
+          )}
+
+          <input
+            type="file"
+            id="userPhoto"
+            accept="image/*"
+            onChange={handleImageUpload}
+          />
         </div>
 
-        {/* FORM */}
+        {/* NAME */}
         <div className="form-group">
           <label>Name</label>
-          <input type="text" placeholder="Enter full name" />
+          <input
+            name="name"
+            type="text"
+            placeholder="Enter full name"
+            value={newUser.name}
+            onChange={handleInputChange}
+          />
+          {errors.name && <small className="error">{errors.name}</small>}
         </div>
 
+        {/* EMAIL */}
         <div className="form-group">
           <label>Email</label>
-          <input type="email" placeholder="Enter email" />
+          <input
+            name="email"
+            type="email"
+            placeholder="Enter email"
+            value={newUser.email}
+            onChange={handleInputChange}
+          />
+          {errors.email && <small className="error">{errors.email}</small>}
         </div>
 
+        {/* PASSWORD */}
         <div className="form-group">
           <label>Password</label>
-          <input type="password" placeholder="Enter password" />
+          <input
+            name="password"
+            type="password"
+            placeholder="Enter password"
+            value={newUser.password}
+            onChange={handleInputChange}
+          />
+          {errors.password && <small className="error">{errors.password}</small>}
         </div>
 
+        {/* ROLE DROPDOWN */}
+        <div className="form-group">
+          <label>Role</label>
+          <select name="role" value={newUser.role} onChange={handleInputChange}>
+            <option value="user">User</option>
+            <option value="moderator">Moderator</option>
+            <option value="admin">Admin</option>
+          </select>
+          {errors.role && <small className="error">{errors.role}</small>}
+        </div>
       </div>
 
       <div className="modal-actions">
-        <button className="btn-cancel" onClick={CloseAddNewUserHandler}>Cancel</button>
-        <button className="btn-primary">Add User</button>
+        <button className="btn-cancel" onClick={closeAddUserModal}>Cancel</button>
+        <button className="btn-primary" onClick={submitAddUser}>Add User</button>
       </div>
 
     </div>
   </div>
 )}
-
 
 
 
