@@ -691,33 +691,182 @@ $transition-fast: all 0.15s ease-in-out;
 
 
 // -------------------------------
-// MODAL
+ // -------------------------------
+// MODAL (Upgraded)
 // -------------------------------
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.55); // a bit richer than plain black
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   @include flex-center;
   z-index: 1000;
+  padding: 1.5rem;
+  animation: modal-fade-in 0.25s ease-out;
+
+  // Optional: smoother on very small screens
+  @media (max-width: 480px) {
+    padding: 1rem;
+  }
 }
 
 .modal-content {
+  position: relative;
   background: $card-bg;
   padding: 2rem;
   border-radius: $border-radius-lg;
-  max-width: 500px;
+  max-width: 520px;
   width: 100%;
   box-shadow: $shadow-xl;
+  text-align: left;
+  transform: translateY(10px) scale(0.97);
+  opacity: 0;
+  animation: modal-slide-up 0.26s ease-out forwards;
 
-  &.delete-modal .modal-icon {
-    @include flex-center;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1rem;
-    background: rgba($danger-color, 0.1);
-    border-radius: 50%;
-    font-size: 2.5rem;
-    color: $danger-color;
+  @media (max-width: 480px) {
+    padding: 1.5rem;
+    border-radius: $border-radius;
+  }
+
+  // Header: title + optional icon
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: $text-primary;
+    }
+
+    .modal-subtitle {
+      margin-top: 0.35rem;
+      font-size: 0.9rem;
+      color: $text-secondary;
+    }
+
+    .modal-close-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.25rem;
+      line-height: 1;
+      padding: 0.25rem;
+      border-radius: 999px;
+      color: $text-muted;
+      transition: $transition-fast;
+      flex-shrink: 0;
+
+      &:hover {
+        background: $bg-color;
+        color: $text-primary;
+        transform: translateY(-1px);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $primary-color;
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  // Body text
+  .modal-body {
+    font-size: 0.95rem;
+    color: $text-secondary;
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+
+    p {
+      margin: 0 0 0.75rem 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Actions at the bottom
+  .modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-end;
+
+    @media (max-width: 480px) {
+      flex-direction: column-reverse;
+
+      > * {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  // Delete variant (your special style)
+  &.delete-modal {
+    text-align: center;
+
+    .modal-icon {
+      @include flex-center;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      background: rgba($danger-color, 0.1);
+      border-radius: 50%;
+      font-size: 2.5rem;
+      color: $danger-color;
+    }
+
+    .modal-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .modal-close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+      }
+    }
+
+    .modal-body {
+      margin-bottom: 1.75rem;
+    }
+
+    .modal-actions {
+      justify-content: center;
+    }
+  }
+}
+
+// -------------------------------
+// Modal Animations
+// -------------------------------
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(4px);
+  }
+}
+
+@keyframes modal-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
