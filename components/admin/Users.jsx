@@ -197,7 +197,15 @@ const handleToggleStatus = async (userId, currentStatus) => {
     console.log(error);
   }
 };
+//add new user
+const [AddNewUser,setAddNewUSer]=useState(false)
+const AddNewUserHandler=()=>{
+ setAddNewUSer(true)
+}
 
+const CloseAddNewUserHandler=()=>{
+ setAddNewUSer(false)
+}
 // Refresh (re-fetch)
 const handleRefresh = () => {
   setLoading(true);
@@ -265,12 +273,69 @@ const itemVariants = {
                 </h1>
                 <p>Manage all system users and their permissions</p>
               </div>
-              <button className="btn-primary btn-add-user">
+              <button onClick={AddNewUserHandler} className="btn-primary btn-add-user">
                 <MdAdd />
                 <span>Add New User</span>
               </button>
             </div>
           </motion.div>
+
+
+
+
+
+
+{AddNewUser && (
+  <div className="modal-overlay">
+    <div className="modal-content add-user-modal">
+
+      <button className="modal-close-btn" onClick={CloseAddNewUserHandler}>✕</button>
+
+      <h3>Add New User</h3>
+      <p>Fill the details to create a new user</p>
+
+      <div className="add-user-body">
+
+        {/* PHOTO UPLOAD */}
+        <div className="photo-upload">
+          <label htmlFor="userPhoto" className="photo-label">
+            <span>+</span>
+          </label>
+          <input type="file" id="userPhoto" accept="image/*" />
+        </div>
+
+        {/* FORM */}
+        <div className="form-group">
+          <label>Name</label>
+          <input type="text" placeholder="Enter full name" />
+        </div>
+
+        <div className="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="Enter email" />
+        </div>
+
+        <div className="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="Enter password" />
+        </div>
+
+      </div>
+
+      <div className="modal-actions">
+        <button className="btn-cancel" onClick={CloseAddNewUserHandler}>Cancel</button>
+        <button className="btn-primary">Add User</button>
+      </div>
+
+    </div>
+  </div>
+)}
+
+
+
+
+
+
 
           {/* Stats Cards */}
           <motion.div className="stats-cards" variants={itemVariants}>
