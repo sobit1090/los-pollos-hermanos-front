@@ -1453,3 +1453,26 @@ $transition-fast: all 0.15s ease-in-out;
   0% { opacity: 0; transform: translateY(30px) scale(0.94); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
+.photo-preview {
+  width: 95px;
+  height: 95px;
+  border-radius: 50%;
+  overflow: hidden;          // ⭐ VERY IMPORTANT
+  cursor: pointer;
+  border: 3px solid $primary-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;       // ⭐ Fills circle properly
+    border-radius: 50%;      // keeps round edges clean
+    transition: 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
