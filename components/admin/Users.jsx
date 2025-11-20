@@ -175,11 +175,11 @@ const submitAddUser = async () => {
       }
     );
 
-    toast.success("User added successfully!");
+    alert("User added successfully!");
     closeAddUserModal();
   } catch (error) {
     console.error(error);
-   toast.error(error.response?.data?.message || "Error adding user");
+   alert(error.response?.data?.message || "Error adding user");
   }
 };
 
