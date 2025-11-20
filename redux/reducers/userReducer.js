@@ -13,7 +13,7 @@ export const authReducer = createReducer(initialState, (builder) => {
     })
     .addCase("loadUserSuccess", (state, action) => {
       state.loading = false;
-      state.isAuthenticated =true;
+      state.isAuthenticated = true;
       state.user = action.payload;
     })
     .addCase("loadUserFail", (state, action) => {
