@@ -96,6 +96,13 @@ useEffect(() => {
   if (appLoading) {
     return <LoadingSpinner message="Preparing your experience..." />;
   }
+const RequireLoginForConfirm = ({ isAuthenticated, children }) => {
+  if (!isAuthenticated) {
+    toast.error("Please login first!");
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
 
   return (
     <div className="sobit">
@@ -151,14 +158,15 @@ useEffect(() => {
               </ProtectedRoute>
             } 
           />
-          <Route 
-            path="/confirmOrder" 
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated} redirect="/login">
-                <ConfirmOrder />
-              </ProtectedRoute>
-            } 
-          />
+      <Route 
+  path="/confirmOrder"
+  element={
+    <RequireLoginForConfirm isAuthenticated={isAuthenticated}>
+      <ConfirmOrder />
+    </RequireLoginForConfirm>
+  }
+/>
+
 
           {/* Cart Routes (Public) */}
           <Route path="/cart" element={<Cart />} />
