@@ -157,21 +157,21 @@ const handleImageUpload = (e) => {
   }
 };
 
- const submitAddUser = async () => {
+const submitAddUser = async () => {
   if (!validateFields()) return;
 
   try {
-    const formData = new FormData();
-    formData.append("name", newUser.name);
-    formData.append("email", newUser.email);
-    formData.append("password", newUser.password);
-    formData.append("role", newUser.role);
-
     const { data } = await axios.post(
       `${server}/admin/register/addnewuser`,
-      formData,
+      {
+        name: newUser.name,
+        email: newUser.email,
+        password: newUser.password,
+        role: newUser.role
+      },
       {
         withCredentials: true,
+        headers: { "Content-Type": "application/json" }
       }
     );
 
@@ -179,7 +179,7 @@ const handleImageUpload = (e) => {
     closeAddUserModal();
   } catch (error) {
     console.error(error);
-    alert("Error adding user");
+    alert(error.response?.data?.message || "Error adding user");
   }
 };
 
