@@ -15,29 +15,27 @@ const SignupForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
- try {
-  const { data } = await axios.post(
-    "https://los-pollos-hermanos-0ui5.onrender.com/api/v1/register",
-    { name, email, password },
-    { withCredentials: true }
-  );
+    try {
+      const { data } = await axios.post(
+        "https://los-pollos-hermanos-0ui5.onrender.com/api/v1/register",
+        { name, email, password },
+        { withCredentials: true }
+      );
 
-  toast.success("Registration successful!");
-  toast.success("Now you can login!");
+      toast.success("Registration successful!");
+      toast.success(" Now You Can Login!")
 
-  // small delay → gives toast time to display
-  setTimeout(() => {
-    navigate("/login");
-  }, 800);
+      // ✅ Redirect to login page (or home)
+      navigate("/login"); // 👈 redirect after success
 
-  setName("");
-  setEmail("");
-  setPassword("");
-} catch (error) {
-  console.error("Registration failed:", error);
-  toast.error(error.response?.data?.message || "Registration failed");
-}
-
+      // Optionally reset form
+      setName("");
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      toast.error(error.response?.data?.message || "Registration failed");
+    }
   };
   const loginHandler = () => {
     window.open(`${server}/googlelogin`, "_self");

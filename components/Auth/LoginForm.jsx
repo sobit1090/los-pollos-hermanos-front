@@ -1,57 +1,40 @@
-import React, { useState, useEffect } from "react";   // ⭐ updated import
+import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useNavigate, useLocation } from "react-router-dom";   // ⭐ added useLocation
+import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { server } from "../../redux/store";
 import { useDispatch } from "react-redux";
-import { loadUser } from "../../redux/actions/user.js";
-
+import {loadUser} from "../../redux/actions/user.js"
 const LoginForm = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();   // ⭐ added
-
+  const dispatch=useDispatch();
+  //const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // ⭐⭐⭐ ADD THIS — SHOW TOAST IF GOOGLE LOGIN FAILS
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const error = params.get("error");
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (error === "EMAIL_ALREADY_EXISTS_PASSWORD_LOGIN") {
-      toast.error("This email is already registered. Try logging in with password instead.");
-    }
+  try {
+    const { data } = await axios.post(
+      `${server}/login`,
+      { email, password },
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
-    if (error === "SOMETHING_WENT_WRONG") {
-      toast.error("Google login failed. Please try again.");
-    }
-  }, [location]);  
-  // ⭐⭐⭐ END OF ADDITION
+    toast.success("Login successful!");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    // ✅ Load user into Redux to update isAuthenticated
+    await dispatch(loadUser());
 
-    try {
-      const { data } = await axios.post(
-        `${server}/login`,
-        { email, password },
-        {
-          withCredentials: true,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      toast.success("Login successful!");
-
-      await dispatch(loadUser());
-
-      navigate("/profile"); // ⭐ FIX: window.href was incorrect, but logic is same
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
-    }
-  };
+    window.href("/profile");
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Login failed");
+  }
+};
 
   const loginHandler = () => {
     window.open(`${server}/googlelogin`, "_self");
@@ -59,10 +42,9 @@ const LoginForm = () => {
 
   return (
     <div className="form-box_1 login_1">
-      <Helmet>
+       <Helmet>
         <title>Login | Los Pollos Hermanos</title>
       </Helmet>
-
       <form onSubmit={handleSubmit}>
         <h1>Login</h1>
 
@@ -97,15 +79,13 @@ const LoginForm = () => {
         <p>or login with social platforms</p>
 
         <div className="social-icons_1">
-          <a className="googlepointer" onClick={loginHandler}>
-            <i className="bx bxl-google"></i>
-          </a>
+          <a className="googlepointer" onClick={loginHandler}><i className="bx bxl-google"></i></a>
           <a href="#"><i className="bx bxl-github"></i></a>
           <a href="#"><i className="bx bxl-linkedin"></i></a>
         </div>
       </form>
     </div>
-  );
+  );z
 };
 
 export default LoginForm;
