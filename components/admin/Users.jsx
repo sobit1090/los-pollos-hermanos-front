@@ -175,7 +175,7 @@ const submitAddUser = async () => {
       }
     );
 
-    toast.error("User added successfully!");
+    toast.success("User added successfully!");
     closeAddUserModal();
   } catch (error) {
     console.error(error);
