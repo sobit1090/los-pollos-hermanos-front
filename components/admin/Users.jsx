@@ -157,7 +157,7 @@ const handleImageUpload = (e) => {
   }
 };
 
-const submitAddUser = async () => {
+ const submitAddUser = async () => {
   if (!validateFields()) return;
 
   try {
@@ -166,20 +166,23 @@ const submitAddUser = async () => {
     formData.append("email", newUser.email);
     formData.append("password", newUser.password);
     formData.append("role", newUser.role);
-    formData.append("photo", newUser.photo);
 
-    const { data } = await axios.post(`${server}/admin/register/addnewuser`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-      withCredentials: true,
-    });
+    const { data } = await axios.post(
+      `${server}/admin/register/addnewuser`,
+      formData,
+      {
+        withCredentials: true,
+      }
+    );
 
     alert("User added successfully!");
     closeAddUserModal();
   } catch (error) {
-    console.log(error);
+    console.error(error);
     alert("Error adding user");
   }
 };
+
 const validateFields = () => {
   let tempErrors = {};
 
