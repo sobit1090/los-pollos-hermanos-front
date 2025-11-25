@@ -127,13 +127,7 @@ const closeAddUserModal = () => {
     photo: null,
   });
 };
-
-const handleInputChange = (e) => {
-  setNewUser({ ...newUser, [e.target.name]: e.target.value });
-};
-
- useEffect(() => {
-  const fetchUsers = async () => {
+ const fetchUsers = async () => {
     try {
       const { data } = await axios.get(`${server}/admin/users`, { withCredentials: true });
       setUsers(data.users);
@@ -143,6 +137,12 @@ const handleInputChange = (e) => {
     setLoading(false);
   };
 
+const handleInputChange = (e) => {
+  setNewUser({ ...newUser, [e.target.name]: e.target.value });
+};
+
+ useEffect(() => {
+ 
   fetchUsers();
 }, []);
 const handleImageUpload = (e) => {
