@@ -186,7 +186,19 @@ const handlePhotoChange = async (e) => {
           <p>Admin panel & analytics</p>
         </div>
       </Link>
-       <Link to="/admin/orders" className="action-card success">
+      <Link to="/admin/dashboard" className="action-card primary">
+        <div className="action-icon">
+          <MdDashboard />
+        </div>
+        <div className="action-content">
+          <h3>Dashboard</h3>
+          <p>Coupan code</p>
+        </div>
+      </Link>
+ 
+
+
+            <Link to="/admin/orders" className="action-card success">
               <div className="action-icon">
                 <MdShoppingBag />
               </div>
@@ -235,25 +247,6 @@ const handlePhotoChange = async (e) => {
             <button className="btn-secondary">
               <MdSettings />
               <span>Account Settings</span>
-            </button>
-          </div>
-        </motion.div>
-     <motion.div className="account-section" variants={itemVariants}>
-          <h2>Account Management</h2>
-          <div className="account-actions">
-            <motion.button 
-            onClick={logoutHandler}
-              className="btn-logout"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <FiLogOut />
-              <span>Sign Out</span>
-            </motion.button>
-            
-            <button className="btn-secondary">
-              <MdSettings />
-              <span>Coupan codes</span>
             </button>
           </div>
         </motion.div>
