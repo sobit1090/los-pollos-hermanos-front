@@ -69,14 +69,19 @@ function App() {
   // Load user once on app start
 useEffect(() => {
   const initializeApp = async () => {
+    const timeout = new Promise((resolve) => setTimeout(resolve, 3000)); // 3 sec max limit
+    const userRequest = dispatch(loadUser());
+
     try {
-      await dispatch(loadUser());
+      // whichever finishes first → continue
+      await Promise.race([userRequest, timeout]);
     } catch (error) {
       console.error("loadUser failed:", error);
     } finally {
       setAppLoading(false);
     }
   };
+
   initializeApp();
 }, [dispatch]);
 

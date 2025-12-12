@@ -4,7 +4,7 @@ export const IMAGES = {
     "https://res.cloudinary.com/dlkf5aiek/image/upload/f_auto,q_auto/v1762407811/WhatsApp_Image_2025-10-31_at_18.50.52_92cd784c_h5udbx.jpg",
   owner:
     "https://res.cloudinary.com/dlkf5aiek/image/upload/f_auto,q_auto/v1762407813/owner_e4qxrq.webp",
-  gus:
+  gus:      
     "https://res.cloudinary.com/dlkf5aiek/image/upload/f_auto,q_auto/v1762407812/LPHET_Gus_ki1tzq.webp",
   losPollos:
     "https://res.cloudinary.com/dlkf5aiek/image/upload/f_auto,q_auto/v1762407808/Los_Pollos_poclt5.png",
