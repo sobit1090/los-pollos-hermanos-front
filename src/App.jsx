@@ -56,6 +56,7 @@ import "../styles/about.scss";
 import "../styles/menu_new.scss";
 import "./App.css";
 import "./index.css";
+import UserDetail from "../components/admin/UserDetail";
 
 function App() {
     const { cartItems = [] } = useSelector((state) => state.cart || {});
@@ -201,6 +202,14 @@ useEffect(() => {
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated} adminRoute={true}isAdmin={user?.role ==="admin"} redirectAdmin="/">
                 <Users />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/users/:id" 
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated} adminRoute={true}isAdmin={user?.role ==="admin"} redirectAdmin="/">
+                <UserDetail />
               </ProtectedRoute>
             } 
           />

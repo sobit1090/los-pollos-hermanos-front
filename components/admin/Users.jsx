@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { AnimatePresence } from "framer-motion";
 
 import { server } from "../../redux/store";
-
+import { useNavigate } from "react-router-dom";
 import {
   MdSearch,
   MdFilterList,
@@ -39,7 +39,7 @@ const Users = () => {
     role: "user",
     photo: null,
   });
-
+const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -440,67 +440,170 @@ const Users = () => {
             <div>Actions</div>
           </div>
 
-          {filteredUsers.map((user, index) => (
-            <motion.div
-              className="tableRow"
-              key={user._id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <div className="cell" data-label="User ID">
-                <div className="user-id">{user._id.slice(-5)}</div>
-              </div>
-              <div className="cell" data-label="User Info">
-                <div className="user-info">
-                  <img
-                    src={user.photo || "https://via.placeholder.com/150?text=User"}
-                    alt={user.name}
-                    className="userPhoto"
-                  />
-                  <div className="user-details">
-                    <div className="user-name">{user.name}</div>
-                    <div className="user-email">
-                      <MdEmail className="email-icon" />
-                      {user.email}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="cell" data-label="Role">
-                <span className={getRoleBadgeClass(user.role)}>{user.role}</span>
-              </div>
-              <div className="cell" data-label="Status">
-                <span className={getStatusBadgeClass(user.status)}>{user.status}</span>
-              </div>
-              <div className="cell" data-label="Member Since">
-                <span className="join-date">
-                  <MdCalendarToday className="date-icon" />
-                  {formatDate(user.createdAt)}
-                </span>
-              </div>
-              <div className="cell" data-label="Last Active">
-                <span className="last-active">
-                  {user.lastActive ? formatDate(user.lastActive) : "—"}
-                </span>
-              </div>
-              <div className="cell" data-label="Actions">
-                <div className="action-buttons">
-                  <button className="btn-edit" title="Edit User"><MdEdit /></button>
-                  <button
-                    className={`btn-status ${user.status === "Active" ? "btn-inactive" : "btn-active"}`}
-                    title={user.status === "Active" ? "Deactivate User" : "Activate User"}
-                    onClick={() => handleToggleStatus(user._id, user.status)}
-                  >
-                    {user.status === "Active" ? <MdBlock /> : <MdCheckCircle />}
-                  </button>
-                  <button className="btn-delete" title="Delete User" onClick={() => setDeleteConfirm(user._id)}>
-                    <MdDelete />
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+         {filteredUsers.map((user, index) => (
+  <motion.div
+    className="tableRow clickable-row"
+    key={user._id}
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.05 }}
+
+    onClick={() =>
+      navigate(`/admin/user/${user._id}`)
+    }
+  >
+
+    <div className="cell" data-label="User ID">
+      <div className="user-id">
+        {user._id.slice(-5)}
+      </div>
+    </div>
+
+    <div className="cell" data-label="User Info">
+
+      <div className="user-info">
+
+        <img
+          src={
+            user.photo ||
+            "https://via.placeholder.com/150?text=User"
+          }
+          alt={user.name}
+          className="userPhoto"
+        />
+
+        <div className="user-details">
+
+          <div className="user-name">
+            {user.name}
+          </div>
+
+          <div className="user-email">
+            <MdEmail className="email-icon" />
+            {user.email}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div className="cell" data-label="Role">
+
+      <span className={getRoleBadgeClass(user.role)}>
+        {user.role}
+      </span>
+
+    </div>
+
+    <div className="cell" data-label="Status">
+
+      <span className={getStatusBadgeClass(user.status)}>
+        {user.status}
+      </span>
+
+    </div>
+
+    <div className="cell" data-label="Member Since">
+
+      <span className="join-date">
+
+        <MdCalendarToday className="date-icon" />
+
+        {formatDate(user.createdAt)}
+
+      </span>
+
+    </div>
+
+    <div className="cell" data-label="Last Active">
+
+      <span className="last-active">
+
+        {user.lastActive
+          ? formatDate(user.lastActive)
+          : "—"}
+
+      </span>
+
+    </div>
+
+    <div className="cell" data-label="Actions">
+
+      <div className="action-buttons">
+
+        {/* EDIT */}
+
+        <button
+          className="btn-edit"
+          title="Edit User"
+
+          onClick={(e) => {
+
+            e.stopPropagation();
+
+            navigate(`/admin/user/${user._id}`);
+          }}
+        >
+          <MdEdit />
+        </button>
+
+        {/* STATUS */}
+
+        <button
+          className={`btn-status ${
+            user.status === "Active"
+              ? "btn-inactive"
+              : "btn-active"
+          }`}
+
+          title={
+            user.status === "Active"
+              ? "Deactivate User"
+              : "Activate User"
+          }
+
+          onClick={(e) => {
+
+            e.stopPropagation();
+
+            handleToggleStatus(
+              user._id,
+              user.status
+            );
+          }}
+        >
+
+          {user.status === "Active"
+            ? <MdBlock />
+            : <MdCheckCircle />
+          }
+
+        </button>
+
+        {/* DELETE */}
+
+        <button
+          className="btn-delete"
+          title="Delete User"
+
+          onClick={(e) => {
+
+            e.stopPropagation();
+
+            setDeleteConfirm(user._id);
+          }}
+        >
+          <MdDelete />
+        </button>
+
+      </div>
+
+    </div>
+
+  </motion.div>
+))}
 
           {filteredUsers.length === 0 && (
             <motion.div className="empty-state" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
