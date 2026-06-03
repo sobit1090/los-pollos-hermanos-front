@@ -89,7 +89,7 @@ const EditUserModal = ({ user, onClose, onSave }) => {
       if (form.photo)    formData.append("photo", form.photo);
 
       const { data } = await axios.put(
-        `${server}/admin/users/${user._id}`,
+        `${server}/admin/user/${user._id}`,
         formData,
         { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -215,7 +215,7 @@ const UserDetail = () => {
   const handleToggleStatus = async () => {
     try {
       const { data } = await axios.put(
-        `${server}/admin/users/${id}/toggle`,
+        `${server}/admin/user/${id}/toggle`,
         {},
         { withCredentials: true }
       );
@@ -240,7 +240,7 @@ const UserDetail = () => {
 
     toast.success("User deleted");
 
-    navigate("/admin/users");
+    navigate("/admin/user");
 
   } catch {
 
@@ -301,7 +301,7 @@ const UserDetail = () => {
         <div className="ud-not-found">
           <MdWarning className="ud-nf-icon" />
           <h2>User Not Found</h2>
-          <button className="ud-back-btn" onClick={() => navigate("/admin/users")}>
+          <button className="ud-back-btn" onClick={() => navigate("/admin/user")}>
             <MdArrowBack /> Back to Users
           </button>
         </div>
@@ -362,7 +362,7 @@ const UserDetail = () => {
       >
         {/* ── Top bar ── */}
         <div className="ud-topbar">
-          <button className="ud-back-btn" onClick={() =>navigate("/admin/users")}>
+          <button className="ud-back-btn" onClick={() =>navigate("/admin/user")}>
             <MdArrowBack /> Back to Users
           </button>
           <div className="ud-topbar-actions">
