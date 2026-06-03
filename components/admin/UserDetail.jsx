@@ -196,8 +196,8 @@ const UserDetail = () => {
     const load = async () => {
       try {
         const [userRes, ordersRes] = await Promise.all([
-          axios.get(`${server}/admin/user//${id}`, { withCredentials: true }),
-          axios.get(`${server}/admin/user//${id}/orders`, { withCredentials: true }),
+          axios.get(`${server}/admin/user/${id}`, { withCredentials: true }),
+          axios.get(`${server}/admin/user/${id}/orders`, { withCredentials: true }),
         ]);
         setUser(userRes.data.user);
         setOrders(ordersRes.data.orders || []);
@@ -301,7 +301,7 @@ const UserDetail = () => {
         <div className="ud-not-found">
           <MdWarning className="ud-nf-icon" />
           <h2>User Not Found</h2>
-          <button className="ud-back-btn" onClick={() => navigate("/admin/user")}>
+          <button className="ud-back-btn" onClick={() => navigate("/admin/users")}>
             <MdArrowBack /> Back to Users
           </button>
         </div>
