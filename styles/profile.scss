@@ -402,40 +402,37 @@ body.profile-page .footer-nav {
       border-radius: 14px;
       gap: 1rem;
     }
+ .profile-header {
+  align-items: center;
+  text-align: center;
+}
 
-    .profile-left {
-      flex-direction: column;
-      text-align: center;
-    }
+.profile-left {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
 
-    .user-email {
-      justify-content: center;
-    }
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
 
-    .user-stats {
-      justify-content: center;
-    }
+.user-info {
+  width: 100%;
+}
 
-    .actions-grid {
-      grid-template-columns: 1fr;
-    }
+.user-email {
+  justify-content: center;
+}
 
-    .account-actions {
-      flex-direction: column;
-    }
-
-    .btn-logout,
-    .btn-secondary {
-      width: 100%;
-    }
-
-    .avatar-container .profile-avatar {
-      width: 80px;
-      height: 80px;
-    }
-
-    .user-info h1 {
-      font-size: 1.3rem;
-    }
+.user-stats {
+  justify-content: center;
+  width: 100%;
+}
   }
 }
