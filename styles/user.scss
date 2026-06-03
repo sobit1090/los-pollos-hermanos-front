@@ -110,7 +110,9 @@
         word-break: break-word;
       }
     }
-
+.clickable-row {
+  cursor: pointer;
+}
     .badges-row {
       display: flex;
       gap: 0.6rem;
