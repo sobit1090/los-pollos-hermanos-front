@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom"; // React Router v5
+ import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { toast } from "sonner";
@@ -182,7 +182,7 @@ const EditUserModal = ({ user, onClose, onSave }) => {
 // ─── Main UserDetail Component ────────────────────────────────────────────────
 const UserDetail = () => {
   const { id }    = useParams();
-  const history   = useHistory();
+  const navigate = useNavigate();
 
   const [user,    setUser]    = useState(null);
   const [orders,  setOrders]  = useState([]);
@@ -231,7 +231,7 @@ const UserDetail = () => {
     try {
       await axios.delete(`${server}/admin/users/${id}`, { withCredentials: true });
       toast.success("User deleted");
-      history.push("/admin/users");
+    navigate(("/admin/users");
     } catch {
       toast.error("Failed to delete user");
     }
@@ -290,7 +290,7 @@ const UserDetail = () => {
         <div className="ud-not-found">
           <MdWarning className="ud-nf-icon" />
           <h2>User Not Found</h2>
-          <button className="ud-back-btn" onClick={() => history.push("/admin/users")}>
+          <button className="ud-back-btn" onClick={() => navigate("/admin/users")}>
             <MdArrowBack /> Back to Users
           </button>
         </div>
@@ -351,7 +351,7 @@ const UserDetail = () => {
       >
         {/* ── Top bar ── */}
         <div className="ud-topbar">
-          <button className="ud-back-btn" onClick={() => history.push("/admin/users")}>
+          <button className="ud-back-btn" onClick={() =>navigate("/admin/users")}>
             <MdArrowBack /> Back to Users
           </button>
           <div className="ud-topbar-actions">
