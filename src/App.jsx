@@ -206,7 +206,7 @@ useEffect(() => {
             } 
           />
           <Route 
-            path="/admin/users/:id" 
+            path="/admin/user/:id" 
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated} adminRoute={true}isAdmin={user?.role ==="admin"} redirectAdmin="/">
                 <UserDetail />
