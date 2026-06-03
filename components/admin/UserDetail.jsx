@@ -196,8 +196,8 @@ const UserDetail = () => {
     const load = async () => {
       try {
         const [userRes, ordersRes] = await Promise.all([
-          axios.get(`${server}/admin/users/${id}`, { withCredentials: true }),
-          axios.get(`${server}/admin/users/${id}/orders`, { withCredentials: true }),
+          axios.get(`${server}/admin/user//${id}`, { withCredentials: true }),
+          axios.get(`${server}/admin/user//${id}/orders`, { withCredentials: true }),
         ]);
         setUser(userRes.data.user);
         setOrders(ordersRes.data.orders || []);
@@ -227,15 +227,26 @@ const UserDetail = () => {
   };
 
   // ── Delete ──
-  const handleDelete = async () => {
-    try {
-      await axios.delete(`${server}/admin/users/${id}`, { withCredentials: true });
-      toast.success("User deleted");
-    navigate(("/admin/users");
-    } catch {
-      toast.error("Failed to delete user");
-    }
-  };
+ const handleDelete = async () => {
+
+  try {
+
+    await axios.delete(
+      `${server}/admin/user/${id}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    toast.success("User deleted");
+
+    navigate("/admin/users");
+
+  } catch {
+
+    toast.error("Failed to delete user");
+  }
+};
 
   // ── Stats derived from orders ──
   const stats = {
