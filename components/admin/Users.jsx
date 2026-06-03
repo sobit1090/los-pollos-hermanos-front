@@ -23,7 +23,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 
-import  server from "../../redux/store";
+import server from "../../redux/store";
 
 /* =========================================
     USERS COMPONENT
@@ -78,7 +78,7 @@ const Users = () => {
         }
       );
 
-      setUsers(data.users || []);
+      setUsers(data.users);
 
     } catch (error) {
 
@@ -344,92 +344,76 @@ const Users = () => {
       FILTER USERS
   ========================================= */
 
-  const filteredUsers = (users || [])
-    .filter((user) => {
+ const filteredUsers = (users || []).filter((user) => {
 
-      const matchesSearch =
+  const userName =
+    String(user?.name || "").toLowerCase();
 
-        (user.name || "")
-          .toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          )
+  const userEmail =
+    String(user?.email || "").toLowerCase();
 
-        ||
+  const userId =
+    String(user?._id || "").toLowerCase();
 
-        (user.email || "")
-          .toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          )
+  const userRole =
+    String(user?.role || "user").toLowerCase();
 
-        ||
+  const userStatus =
+    String(user?.status || "active").toLowerCase();
 
-        (user._id || "")
-          .toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          );
+  const search =
+    searchTerm.toLowerCase();
 
-      const matchesRole =
+  const matchesSearch =
+    userName.includes(search) ||
+    userEmail.includes(search) ||
+    userId.includes(search);
 
-        roleFilter === "all"
+  const matchesRole =
+    roleFilter === "all" ||
+    userRole === roleFilter.toLowerCase();
 
-        ||
+  const matchesStatus =
+    statusFilter === "all" ||
+    userStatus === statusFilter.toLowerCase();
 
-        (user.role || "user")
-          .toLowerCase()
-
-          === roleFilter;
-
-      const matchesStatus =
-
-        statusFilter === "all"
-
-        ||
-
-        (user.status || "active")
-          .toLowerCase()
-
-          === statusFilter;
-
-      return (
-        matchesSearch &&
-        matchesRole &&
-        matchesStatus
-      );
-    });
+  return (
+    matchesSearch &&
+    matchesRole &&
+    matchesStatus
+  );
+});
 
   /* =========================================
       STATS
   ========================================= */
 
-  const stats = {
+ const stats = {
 
-    total:
-      (users || []).length,
+  total:
+    (users || []).length,
 
-    active:
-      (users || []).filter(
-        (user) =>
-          (user.status || "Active")
-            === "Active"
-      ).length,
+  active:
+    (users || []).filter(
+      (user) =>
+        String(user?.status || "")
+          .toLowerCase() === "active"
+    ).length,
 
-    admins:
-      (users || []).filter(
-        (user) =>
-          (user.role || "user")
-            === "admin"
-      ).length,
+  admins:
+    (users || []).filter(
+      (user) =>
+        String(user?.role || "")
+          .toLowerCase() === "admin"
+    ).length,
 
-    inactive:
-      (users || []).filter(
-        (user) =>
-          (user.status || "")
-            === "Inactive"
-      ).length,
-  };
+  inactive:
+    (users || []).filter(
+      (user) =>
+        String(user?.status || "")
+          .toLowerCase() === "inactive"
+    ).length,
+};
 
   /* =========================================
       HELPERS
@@ -437,10 +421,7 @@ const Users = () => {
 
   const getRoleBadgeClass = (role) => {
 
-    switch (
-      (role || "")
-        .toLowerCase()
-    ) {
+   switch (String(role || "").toLowerCase()){
 
       case "admin":
         return "role-badge admin";
