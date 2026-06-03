@@ -34,7 +34,7 @@ import "../styles/app.scss";
 import "../styles/header.scss";
 
 import "../styles/loading.scss";
-
+import "../styles/users.scss"
 import "../styles/footer.scss";
 import "../styles/cart.scss";
 import "../styles/orderDetails.scss";
