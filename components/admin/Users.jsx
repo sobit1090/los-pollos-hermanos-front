@@ -558,158 +558,102 @@ const itemVariants = {
             </p>
           </motion.div>
 
-          {/* Table Container */}
-          <motion.div className="table-container" variants={itemVariants}>
-            {/* Table Header */}
-            <div className="tableHeader">
-              <div>User ID</div>
-              <div>User Info</div>
-              <div>Role</div>
-              <div>Status</div>
-              <div>Member Since</div>
-              <div>Last Active</div>
-              <div>Actions</div>
-            </div>
+          {/* Cards Grid Container */}
+          <motion.div className="cards-container" variants={itemVariants}>
+            {filteredUsers.length > 0 ? (
+              <div className="cards-grid">
+                {filteredUsers.map((user, index) => (
+                  <motion.div 
+                    className="user-card"
+                    key={user._id}            
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.08 }}
+                    whileHover={{ y: -4 }}
+                  >
+                    {/* Card Header with Avatar */}
+                    <div className="card-header">
+                      <img 
+                        src={user.photo || "https://via.placeholder.com/150?text=User"} 
+                        alt={user.name} 
+                        className="card-avatar"
+                      />
+                      <div className="card-title-section">
+                        <h3 className="card-name">{user.name}</h3>
+                        <p className="card-id">ID: {user._id.slice(-5)}</p>
+                      </div>
+                    </div>
 
-            {/* Table Rows */}
-         {filteredUsers.map((user, index) => (
-  <motion.div 
-    className="tableRow" 
+                    {/* Card Content */}
+                    <div className="card-content">
+                      {/* Email */}
+                      <div className="info-item">
+                        <span className="info-label">
+                          <MdEmail className="info-icon" />
+                          Email
+                        </span>
+                        <p className="info-value">{user.email}</p>
+                      </div>
 
-  key={user._id}            
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay: index * 0.1 }}
-  >
-    <div className="cell" data-label="User ID">
-      <div className="user-id">
-      
-        {user._id.slice(-5)} {/* ✅ Show last 5 digits */}           
-      </div>
-    </div>
+                      {/* Role and Status Badges */}
+                      <div className="badges-row">
+                        <span className={getRoleBadgeClass(user.role)}>
+                          {user.role}
+                        </span>
+                        <span className={getStatusBadgeClass(user.status)}>
+                          {user.status}
+                        </span>
+                      </div>
 
-    <div className="cell" data-label="User Info">
-      <div className="user-info">
-        <img 
-          src={user.photo || "https://via.placeholder.com/150?text=User"} 
-          alt={user.name} 
-          className="userPhoto"
-        />
-        <div className="user-details">
-          <div className="user-name">{user.name}</div>
-          <div className="user-email">
-            <MdEmail className="email-icon" />
-            {user.email}
-          </div>
-        </div>
-      </div>
-    </div>
+                      {/* Dates */}
+                      <div className="dates-row">
+                        <div className="date-item">
+                          <span className="date-label">
+                            <MdCalendarToday className="date-icon" />
+                            Joined
+                          </span>
+                          <p className="date-value">{formatDate(user.createdAt)}</p>
+                        </div>
+                        <div className="date-item">
+                          <span className="date-label">
+                            <MdRefresh className="date-icon" />
+                            Last Active
+                          </span>
+                          <p className="date-value">{user.lastActive ? formatDate(user.lastActive) : "—"}</p>
+                        </div>
+                      </div>
+                    </div>
 
-    <div className="cell" data-label="Role">
-      <span className={getRoleBadgeClass(user.role)}>
-        {user.role}
-      </span>
-    </div>
+                    {/* Card Actions */}
+                    <div className="card-actions">
+                      <button 
+                        className="btn-edit card-btn"
+                        title="Edit User"
+                      >
+                        <MdEdit /> Edit
+                      </button>
 
-    <div className="cell" data-label="Status">
-      <span className={getStatusBadgeClass(user.status)}>
-        {user.status}
-      </span>
-    </div>
+                      <button 
+                        className={`btn-status card-btn ${user.status === 'Active' ? 'btn-inactive' : 'btn-active'}`}
+                        title={user.status === 'Active' ? 'Deactivate User' : 'Activate User'}
+                        onClick={() => handleToggleStatus(user._id, user.status)} 
+                      >
+                        {user.status === 'Active' ? <MdBlock /> : <MdCheckCircle />}
+                        {user.status === 'Active' ? 'Deactivate' : 'Activate'}
+                      </button>
 
-    <div className="cell" data-label="Member Since">
-      <span className="join-date">
-        <MdCalendarToday className="date-icon" />
-
-       {formatDate(user.createdAt)}    
-      </span>
-    </div>
-
-    <div className="cell" data-label="Last Active">
-      <span className="last-active">
-
-       {user.lastActive ? formatDate(user.lastActive) : "—"} 
-      </span>
-    </div>
-
-    <div className="cell" data-label="Actions">
-      <div className="action-buttons">
-
-        <button 
-          className="btn-edit"
-          title="Edit User"
- 
-        >
-          <MdEdit />
-        </button>
-
-        <button 
-          className={`btn-status ${user.status === 'Active' ? 'btn-inactive' : 'btn-active'}`}
-          title={user.status === 'Active' ? 'Deactivate User' : 'Activate User'}
-         
-         onClick={() => handleToggleStatus(user._id, user.status)} 
-        >
-          {user.status === 'Active' ? <MdBlock /> : <MdCheckCircle />}
-        </button>
-
-         <AnimatePresence>
-        {deleteConfirm && (
-          <motion.div 
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setDeleteConfirm(null)}
-          >
-            <motion.div 
-              className="modal-content delete-modal"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="modal-icon">
-                <MdWarning />
+                      <button 
+                        className="btn-delete card-btn"
+                        title="Delete User"
+                        onClick={() => setDeleteConfirm(user._id)}
+                      >
+                        <MdDelete />
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-              <h3>Delete User?</h3>
-              <p>
-                Are you sure you want to delete this user? 
-                This action cannot be undone.
-              </p>
-              <div className="modal-actions">
-                <button 
-                  className="btn-secondary"
-                  onClick={() => setDeleteConfirm(null)}
-                >
-                  Cancel
-                </button>
-                <button 
-                  className="btn-danger"
-                  onClick={() => handleDeleteUser(deleteConfirm)}
-                >
-                  <MdDelete />
-                  Delete User
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-<button 
-  className="btn-delete"
-  title="Delete User"
-  onClick={() => setDeleteConfirm(user._id)}
->
-  <MdDelete />
-</button>
-
-      </div>
-    </div>
-  </motion.div>
-))}
-
-
-            {filteredUsers.length === 0 && (
+            ) : (
               <motion.div 
                 className="empty-state"
                 initial={{ opacity: 0 }}
@@ -725,6 +669,51 @@ const itemVariants = {
                 </p>
               </motion.div>
             )}
+
+            {/* Delete Confirmation Modal */}
+            <AnimatePresence>
+              {deleteConfirm && (
+                <motion.div 
+                  className="modal-overlay"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setDeleteConfirm(null)}
+                >
+                  <motion.div 
+                    className="modal-content delete-modal"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.9, opacity: 0 }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="modal-icon">
+                      <MdWarning />
+                    </div>
+                    <h3>Delete User?</h3>
+                    <p>
+                      Are you sure you want to delete this user? 
+                      This action cannot be undone.
+                    </p>
+                    <div className="modal-actions">
+                      <button 
+                        className="btn-secondary"
+                        onClick={() => setDeleteConfirm(null)}
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        className="btn-danger"
+                        onClick={() => handleDeleteUser(deleteConfirm)}
+                      >
+                        <MdDelete />
+                        Delete User
+                      </button>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         </motion.main>
       </section>
