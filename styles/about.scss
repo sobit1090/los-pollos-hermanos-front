@@ -5,7 +5,7 @@
 .about {
   min-height: 100vh;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem;
 
   // Hero Section
   .about-hero {
@@ -15,7 +15,7 @@
     grid-template-columns: 2fr 1fr;
     gap: 3rem;
     align-items: center;
-    padding: 3rem 0;
+    padding: 1.5rem 0;
 
     .hero-content {
       .hero-title {
@@ -96,7 +96,7 @@
 
   // Story Section
   .story-section {
-    padding: .5rem;
+    padding: .2rem;
     max-width: 1200px;
     margin: 0 auto 6rem;
     background: white;
