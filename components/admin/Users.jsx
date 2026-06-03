@@ -23,7 +23,7 @@ import {
   FiUsers,
 } from "react-icons/fi";
 
-import { server } from "../../redux/store";
+import  server from "../../redux/store";
 
 /* =========================================
     USERS COMPONENT
