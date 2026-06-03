@@ -3,9 +3,8 @@
   import axios from "axios";
 import { toast } from "sonner";
 import { AnimatePresence } from "framer-motion";
-
-import { server } from "../../redux/store";
-import "../styles/Users.scss";
+import server from "../../redux/store"
+ 
 
   import { 
     MdSearch,
