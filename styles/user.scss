@@ -1,5 +1,20 @@
 @use "colors" as *;
 
+// ─────────────────────────────────────────────────────────
+// GLOBAL SMOOTH SCROLLING
+// ─────────────────────────────────────────────────────────
+
+html,
+body,
+* {
+  scroll-behavior: smooth;
+}
+
+// Font smoothing for better rendering
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 /* =====================================
    CARDS GRID LAYOUT - Modern Display
@@ -110,9 +125,11 @@
         word-break: break-word;
       }
     }
-.clickable-row {
-  cursor: pointer;
-}
+
+    .clickable-row {
+      cursor: pointer;
+    }
+
     .badges-row {
       display: flex;
       gap: 0.6rem;
@@ -401,12 +418,13 @@
       font-size: 0.9rem;
       border-radius: 12px 12px 0 0;
 
-      > div {
+      >div {
         padding: 1.25rem 1rem;
 
         &:first-child {
           border-radius: 12px 0 0 0;
         }
+
         &:last-child {
           border-radius: 0 12px 0 0;
         }
@@ -496,10 +514,12 @@
             background: linear-gradient(135deg, #dc3545, #c82333);
             color: white;
           }
+
           &.moderator {
             background: linear-gradient(135deg, #ffc107, #e0a800);
             color: #212529;
           }
+
           &.user {
             background: linear-gradient(135deg, #28a745, #218838);
             color: white;
@@ -519,11 +539,13 @@
             color: #155724;
             border: 1px solid #c3e6cb;
           }
+
           &.inactive {
             background: linear-gradient(135deg, #f8d7da, #f5c6cb);
             color: #721c24;
             border: 1px solid #f5c6cb;
           }
+
           &.suspended {
             background: linear-gradient(135deg, #fff3cd, #ffeaa7);
             color: #856404;
@@ -650,6 +672,7 @@
    MOBILE BREAKPOINT
    ============================================= */
 @media screen and (max-width: 768px) {
+
   /* Hide desktop table */
   .desktop-table {
     display: none !important;
@@ -737,24 +760,29 @@
               background: linear-gradient(135deg, #dc3545, #c82333);
               color: white;
             }
+
             &.moderator {
               background: linear-gradient(135deg, #8b5cf6, #7c3aed);
               color: white;
             }
+
             &.user {
               background: linear-gradient(135deg, #28a745, #218838);
               color: white;
             }
+
             &.active {
               background: linear-gradient(135deg, #d4edda, #c3e6cb);
               color: #155724;
               border: 1px solid #c3e6cb;
             }
+
             &.inactive {
               background: linear-gradient(135deg, #f8d7da, #f5c6cb);
               color: #721c24;
               border: 1px solid #f5c6cb;
             }
+
             &.suspended {
               background: linear-gradient(135deg, #fff3cd, #ffeaa7);
               color: #856404;
@@ -1423,10 +1451,12 @@ $transition-fast: all 0.15s ease-in-out;
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -1476,7 +1506,7 @@ $transition-fast: all 0.15s ease-in-out;
   .filter-controls {
     width: 100%;
 
-    > * {
+    >* {
       flex: 1;
     }
   }
@@ -1646,6 +1676,7 @@ $transition-fast: all 0.15s ease-in-out;
     opacity: 0;
     transform: translateY(30px) scale(0.94);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);

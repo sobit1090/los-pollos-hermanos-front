@@ -1,5 +1,24 @@
+// ─────────────────────────────────────────────────────────
+// GLOBAL SMOOTH SCROLLING
+// ─────────────────────────────────────────────────────────
+
+html,
+body,
+* {
+  scroll-behavior: smooth;
+}
+
+// Font smoothing for better rendering
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
 //* TEMP DEBUG */
-body { outline: 5px solid magenta !important; }
+body {
+  outline: 5px solid magenta !important;
+}
 
 // ─────────────────────────────────────────────────────────
 // USERS.SCSS - User Detail Page & Admin User Management

@@ -39,7 +39,7 @@ const Users = () => {
     role: "user",
     photo: null,
   });
-const navigate = useNavigate();
+  const navigate = useNavigate();
   const [previewImage, setPreviewImage] = useState(null);
   const [errors, setErrors] = useState({});
 
@@ -440,170 +440,169 @@ const navigate = useNavigate();
             <div>Actions</div>
           </div>
 
-         {filteredUsers.map((user, index) => (
-  <motion.div
-    className="tableRow clickable-row"
-    key={user._id}
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ delay: index * 0.05 }}
+          {filteredUsers.map((user, index) => (
+            <motion.div
+              className="tableRow clickable-row"
+              key={user._id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
 
-    onClick={() =>
-      navigate(`/admin/users/${user._id}`)
-    }
-  >
+              onClick={() =>
+                navigate(`/admin/users/${user._id}`)
+              }
+            >
 
-    <div className="cell" data-label="User ID">
-      <div className="user-id">
-        {user._id.slice(-5)}
-      </div>
-    </div>
+              <div className="cell" data-label="User ID">
+                <div className="user-id">
+                  {user._id.slice(-5)}
+                </div>
+              </div>
 
-    <div className="cell" data-label="User Info">
+              <div className="cell" data-label="User Info">
 
-      <div className="user-info">
+                <div className="user-info">
 
-        <img
-          src={
-            user.photo ||
-            "https://via.placeholder.com/150?text=User"
-          }
-          alt={user.name}
-          className="userPhoto"
-        />
+                  <img
+                    src={
+                      user.photo ||
+                      "https://via.placeholder.com/150?text=User"
+                    }
+                    alt={user.name}
+                    className="userPhoto"
+                  />
 
-        <div className="user-details">
+                  <div className="user-details">
 
-          <div className="user-name">
-            {user.name}
-          </div>
+                    <div className="user-name">
+                      {user.name}
+                    </div>
 
-          <div className="user-email">
-            <MdEmail className="email-icon" />
-            {user.email}
-          </div>
+                    <div className="user-email">
+                      <MdEmail className="email-icon" />
+                      {user.email}
+                    </div>
 
-        </div>
+                  </div>
 
-      </div>
+                </div>
 
-    </div>
+              </div>
 
-    <div className="cell" data-label="Role">
+              <div className="cell" data-label="Role">
 
-      <span className={getRoleBadgeClass(user.role)}>
-        {user.role}
-      </span>
+                <span className={getRoleBadgeClass(user.role)}>
+                  {user.role}
+                </span>
 
-    </div>
+              </div>
 
-    <div className="cell" data-label="Status">
+              <div className="cell" data-label="Status">
 
-      <span className={getStatusBadgeClass(user.status)}>
-        {user.status}
-      </span>
+                <span className={getStatusBadgeClass(user.status)}>
+                  {user.status}
+                </span>
 
-    </div>
+              </div>
 
-    <div className="cell" data-label="Member Since">
+              <div className="cell" data-label="Member Since">
 
-      <span className="join-date">
+                <span className="join-date">
 
-        <MdCalendarToday className="date-icon" />
+                  <MdCalendarToday className="date-icon" />
 
-        {formatDate(user.createdAt)}
+                  {formatDate(user.createdAt)}
 
-      </span>
+                </span>
 
-    </div>
+              </div>
 
-    <div className="cell" data-label="Last Active">
+              <div className="cell" data-label="Last Active">
 
-      <span className="last-active">
+                <span className="last-active">
 
-        {user.lastActive
-          ? formatDate(user.lastActive)
-          : "—"}
+                  {user.lastActive
+                    ? formatDate(user.lastActive)
+                    : "—"}
 
-      </span>
+                </span>
 
-    </div>
+              </div>
 
-    <div className="cell" data-label="Actions">
+              <div className="cell" data-label="Actions">
 
-      <div className="action-buttons">
+                <div className="action-buttons">
 
-        {/* EDIT */}
+                  {/* EDIT */}
 
-        <button
-          className="btn-edit"
-          title="Edit User"
+                  <button
+                    className="btn-edit"
+                    title="Edit User"
 
-          onClick={(e) => {
+                    onClick={(e) => {
 
-            e.stopPropagation();
+                      e.stopPropagation();
 
-             navigate(`/admin/users/${user._id}`);
-          }}
-        >
-          <MdEdit />
-        </button>
+                      navigate(`/admin/users/${user._id}`);
+                    }}
+                  >
+                    <MdEdit />
+                  </button>
 
-        {/* STATUS */}
+                  {/* STATUS */}
 
-        <button
-          className={`btn-status ${
-            user.status === "Active"
-              ? "btn-inactive"
-              : "btn-active"
-          }`}
+                  <button
+                    className={`btn-status ${user.status === "Active"
+                        ? "btn-inactive"
+                        : "btn-active"
+                      }`}
 
-          title={
-            user.status === "Active"
-              ? "Deactivate User"
-              : "Activate User"
-          }
+                    title={
+                      user.status === "Active"
+                        ? "Deactivate User"
+                        : "Activate User"
+                    }
 
-          onClick={(e) => {
+                    onClick={(e) => {
 
-            e.stopPropagation();
+                      e.stopPropagation();
 
-            handleToggleStatus(
-              user._id,
-              user.status
-            );
-          }}
-        >
+                      handleToggleStatus(
+                        user._id,
+                        user.status
+                      );
+                    }}
+                  >
 
-          {user.status === "Active"
-            ? <MdBlock />
-            : <MdCheckCircle />
-          }
+                    {user.status === "Active"
+                      ? <MdBlock />
+                      : <MdCheckCircle />
+                    }
 
-        </button>
+                  </button>
 
-        {/* DELETE */}
+                  {/* DELETE */}
 
-        <button
-          className="btn-delete"
-          title="Delete User"
+                  <button
+                    className="btn-delete"
+                    title="Delete User"
 
-          onClick={(e) => {
+                    onClick={(e) => {
 
-            e.stopPropagation();
+                      e.stopPropagation();
 
-            setDeleteConfirm(user._id);
-          }}
-        >
-          <MdDelete />
-        </button>
+                      setDeleteConfirm(user._id);
+                    }}
+                  >
+                    <MdDelete />
+                  </button>
 
-      </div>
+                </div>
 
-    </div>
+              </div>
 
-  </motion.div>
-))}
+            </motion.div>
+          ))}
 
           {filteredUsers.length === 0 && (
             <motion.div className="empty-state" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -671,7 +670,7 @@ const navigate = useNavigate();
 
               {/* Card Footer: Actions */}
               <div className="mc-actions">
-                <button className="mc-btn mc-btn-edit" title="Edit User">
+                <button className="mc-btn mc-btn-edit" title="Edit User" onClick={(e) => { e.stopPropagation(); navigate(`/admin/users/${user._id}`); }}>
                   <MdEdit />
                   <span>Edit</span>
                 </button>
