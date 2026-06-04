@@ -1,36 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom"; // React Router v5
+import { useParams, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { toast } from "sonner";
 import { Helmet } from "react-helmet";
-
 import { server } from "../../redux/store";
-
 import {
   MdArrowBack, MdEdit, MdDelete, MdBlock, MdCheckCircle,
-  MdEmail, MdCalendarToday, MdLocationOn, MdShoppingBag,
+  MdEmail, MdCalendarToday, MdShoppingBag,
   MdWarning, MdPerson, MdSave, MdClose, MdLock,
   MdPhotoCamera, MdAccessTime, MdAttachMoney,
-  MdLocalShipping, MdPhone,
+  MdLocalShipping, MdPhone, MdAdd, MdLocationOn,
 } from "react-icons/md";
-import { FiUser, FiPackage, FiMapPin, FiActivity } from "react-icons/fi";
+import { FiUser, FiPackage, FiMapPin, FiActivity, FiHome } from "react-icons/fi";
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────
 const fmt = (d) =>
-  d
-    ? new Date(d).toLocaleDateString("en-IN", {
-      day: "2-digit", month: "short", year: "numeric",
-    })
-    : "—";
+  d ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 
 const fmtTime = (d) =>
-  d
-    ? new Date(d).toLocaleString("en-IN", {
-      day: "2-digit", month: "short", year: "numeric",
-      hour: "2-digit", minute: "2-digit",
-    })
-    : "—";
+  d ? new Date(d).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
 
 const statusColor = {
   Active: { bg: "#d1fae5", color: "#065f46", dot: "#10b981" },
@@ -40,11 +29,23 @@ const statusColor = {
 
 const roleColor = {
   admin: { bg: "#fee2e2", color: "#991b1b" },
-  moderator: { bg: "#ede9fe", color: "#6d28d9" },
   user: { bg: "#dbeafe", color: "#1e40af" },
 };
 
-// ─── Edit Modal ───────────────────────────────────────────────────────────────
+// ─── Empty Address Template ────────────────────────────────
+const emptyAddress = {
+  addressType: "Home",
+  address1: "",
+  address2: "",
+  city: "",
+  state: "",
+  pinCode: "",
+  country: "IN",
+  phoneNumber: "",
+  isDefault: false,
+};
+
+// ─── Edit User Modal ───────────────────────────────────────
 const EditUserModal = ({ user, onClose, onSave }) => {
   const [form, setForm] = useState({
     name: user.name || "",
@@ -53,9 +54,15 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     confirmPassword: "",
     photo: null,
   });
-  const [preview, setPreview] = useState(user.photo || null);
+  // addresses is a separate editable list
+  const [addresses, setAddresses] = useState(
+    user.addresses?.length ? user.addresses : []
+  );
+  const [editingAddrIdx, setEditingAddrIdx] = useState(null); // which address row is expanded for editing
+  const [preview, setPreview] = useState(user.photo?.url || null);
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile"); // "profile" | "addresses"
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -67,6 +74,29 @@ const EditUserModal = ({ user, onClose, onSave }) => {
     }
   };
 
+  // ─── Address helpers ─────────────────────────────────────
+  const addAddress = () => {
+    setAddresses([...addresses, { ...emptyAddress }]);
+    setEditingAddrIdx(addresses.length); // open the new one immediately
+  };
+
+  const removeAddress = (idx) => {
+    setAddresses(addresses.filter((_, i) => i !== idx));
+    if (editingAddrIdx === idx) setEditingAddrIdx(null);
+  };
+
+  const updateAddressField = (idx, field, value) => {
+    const updated = addresses.map((addr, i) =>
+      i === idx ? { ...addr, [field]: value } : addr
+    );
+    // only one can be default
+    if (field === "isDefault" && value === true) {
+      updated.forEach((a, i) => { if (i !== idx) a.isDefault = false; });
+    }
+    setAddresses(updated);
+  };
+
+  // ─── Validation ──────────────────────────────────────────
   const validate = () => {
     const errs = {};
     if (!form.name.trim()) errs.name = "Name is required";
@@ -74,10 +104,19 @@ const EditUserModal = ({ user, onClose, onSave }) => {
       errs.password = "Password must be at least 6 characters";
     if (form.password !== form.confirmPassword)
       errs.confirmPassword = "Passwords do not match";
+
+    // Validate each address
+    addresses.forEach((addr, i) => {
+      if (!addr.address1.trim()) errs[`addr_${i}_address1`] = "Street address is required";
+      if (!addr.city.trim()) errs[`addr_${i}_city`] = "City is required";
+      if (!addr.pinCode.trim()) errs[`addr_${i}_pinCode`] = "PIN code is required";
+    });
+
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
 
+  // ─── Submit ───────────────────────────────────────────────
   const handleSubmit = async () => {
     if (!validate()) return;
     setSaving(true);
@@ -87,9 +126,11 @@ const EditUserModal = ({ user, onClose, onSave }) => {
       formData.append("role", form.role);
       if (form.password) formData.append("password", form.password);
       if (form.photo) formData.append("photo", form.photo);
+      // Send addresses as a JSON string so multer can parse it alongside the file
+      formData.append("addresses", JSON.stringify(addresses));
 
       const { data } = await axios.put(
-        `${server}/admin/users/${user._id}`,
+        `${server}/admin/user/${user._id}`,
         formData,
         { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -115,76 +156,280 @@ const EditUserModal = ({ user, onClose, onSave }) => {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
         onClick={(e) => e.stopPropagation()}
+        style={{ maxHeight: "90vh", overflowY: "auto" }}
       >
+        {/* Header */}
         <div className="emodal-header">
           <div className="emodal-title">
             <MdPerson className="emodal-title-icon" />
-            <div><h3>Edit User</h3><p>#{user._id?.slice(-6)}</p></div>
+            <div><h3>Edit User</h3><p>#{user._id.slice(-6)}</p></div>
           </div>
           <button className="emodal-close" onClick={onClose}><MdClose /></button>
         </div>
 
-        <div className="emodal-photo-section">
-          <div className="emodal-photo-wrap">
-            <img
-              src={preview || "https://via.placeholder.com/150?text=User"}
-              alt="avatar"
-              className="emodal-avatar"
-            />
-            <label htmlFor="editPhotoUD" className="emodal-photo-btn"><MdPhotoCamera /></label>
-            <input type="file" id="editPhotoUD" accept="image/*" onChange={handlePhoto} hidden />
-          </div>
-          <span className="emodal-photo-hint">Click camera to change photo</span>
+        {/* Tabs */}
+        <div className="emodal-tabs">
+          <button
+            className={`emodal-tab ${activeTab === "profile" ? "active" : ""}`}
+            onClick={() => setActiveTab("profile")}
+          >
+            <FiUser /> Profile Info
+          </button>
+          <button
+            className={`emodal-tab ${activeTab === "addresses" ? "active" : ""}`}
+            onClick={() => setActiveTab("addresses")}
+          >
+            <FiMapPin /> Addresses ({addresses.length})
+          </button>
         </div>
 
-        <div className="emodal-body">
-          <div className="eform-group">
-            <label><MdPerson /> Full Name</label>
-            <input
-              name="name" type="text" placeholder="Enter full name"
-              value={form.name} onChange={handleChange}
-              className={errors.name ? "input-error" : ""}
-            />
-            {errors.name && <small className="ferror">{errors.name}</small>}
-          </div>
+        {/* ── PROFILE TAB ──────────────────────────────────── */}
+        {activeTab === "profile" && (
+          <div className="emodal-body">
+            {/* Photo */}
+            <div className="emodal-photo-section">
+              <div className="emodal-photo-wrap">
+                <img
+                  src={preview || "https://via.placeholder.com/150?text=User"}
+                  alt="avatar"
+                  className="emodal-avatar"
+                />
+                <label htmlFor="editPhoto2" className="emodal-photo-btn">
+                  <MdPhotoCamera />
+                </label>
+                <input type="file" id="editPhoto2" accept="image/*" onChange={handlePhoto} hidden />
+              </div>
+              <span className="emodal-photo-hint">Click camera icon to change photo</span>
+            </div>
 
-          <div className="eform-group">
-            <label><FiUser /> Role</label>
-            <div className="role-selector">
-              {["user", "moderator", "admin"].map((r) => (
-                <button
-                  key={r} type="button"
-                  className={`role-option ${r} ${form.role === r ? "selected" : ""}`}
-                  onClick={() => setForm({ ...form, role: r })}
-                >
-                  {r.charAt(0).toUpperCase() + r.slice(1)}
-                </button>
-              ))}
+            {/* Name */}
+            <div className="eform-group">
+              <label><MdPerson /> Full Name</label>
+              <input
+                name="name" type="text" placeholder="Enter full name"
+                value={form.name} onChange={handleChange}
+                className={errors.name ? "input-error" : ""}
+              />
+              {errors.name && <small className="ferror">{errors.name}</small>}
+            </div>
+
+            {/* Role */}
+            <div className="eform-group">
+              <label><FiUser /> Role</label>
+              <div className="role-selector">
+                {["user", "admin"].map((r) => (
+                  <button
+                    key={r} type="button"
+                    className={`role-option ${r} ${form.role === r ? "selected" : ""}`}
+                    onClick={() => setForm({ ...form, role: r })}
+                  >
+                    {r.charAt(0).toUpperCase() + r.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Password */}
+            <div className="eform-divider"><span><MdLock /> Password Reset (optional)</span></div>
+            <div className="eform-group">
+              <label>New Password</label>
+              <input
+                name="password" type="password" placeholder="Leave blank to keep current"
+                value={form.password} onChange={handleChange}
+                className={errors.password ? "input-error" : ""}
+              />
+              {errors.password && <small className="ferror">{errors.password}</small>}
+            </div>
+            <div className="eform-group">
+              <label>Confirm Password</label>
+              <input
+                name="confirmPassword" type="password" placeholder="Repeat new password"
+                value={form.confirmPassword} onChange={handleChange}
+                className={errors.confirmPassword ? "input-error" : ""}
+              />
+              {errors.confirmPassword && <small className="ferror">{errors.confirmPassword}</small>}
             </div>
           </div>
+        )}
 
-          <div className="eform-divider"><span><MdLock /> Password Reset (optional)</span></div>
+        {/* ── ADDRESSES TAB ────────────────────────────────── */}
+        {activeTab === "addresses" && (
+          <div className="emodal-body">
+            <div className="addr-header">
+              <p style={{ color: "#6b7280", fontSize: "0.875rem" }}>
+                Add, edit, or remove delivery addresses for this user.
+              </p>
+              <button className="addr-add-btn" onClick={addAddress}>
+                <MdAdd /> Add Address
+              </button>
+            </div>
 
-          <div className="eform-group">
-            <label>New Password</label>
-            <input
-              name="password" type="password" placeholder="Leave blank to keep current"
-              value={form.password} onChange={handleChange}
-              className={errors.password ? "input-error" : ""}
-            />
-            {errors.password && <small className="ferror">{errors.password}</small>}
+            {addresses.length === 0 && (
+              <div className="addr-empty">
+                <FiHome style={{ fontSize: "2rem", color: "#9ca3af" }} />
+                <p>No saved addresses. Click "Add Address" to add one.</p>
+              </div>
+            )}
+
+            {addresses.map((addr, idx) => (
+              <div key={idx} className="addr-card">
+                {/* Card header row */}
+                <div className="addr-card-header">
+                  <div className="addr-card-title">
+                    <MdLocationOn className="addr-pin-icon" />
+                    <span className="addr-type-label">
+                      {addr.addressType || `Address ${idx + 1}`}
+                    </span>
+                    {addr.isDefault && (
+                      <span className="addr-default-badge">Default</span>
+                    )}
+                  </div>
+                  <div className="addr-card-actions">
+                    <button
+                      className="addr-edit-btn"
+                      onClick={() => setEditingAddrIdx(editingAddrIdx === idx ? null : idx)}
+                      title={editingAddrIdx === idx ? "Collapse" : "Edit"}
+                    >
+                      {editingAddrIdx === idx ? <MdClose /> : <MdEdit />}
+                    </button>
+                    <button
+                      className="addr-delete-btn"
+                      onClick={() => removeAddress(idx)}
+                      title="Remove address"
+                    >
+                      <MdDelete />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Collapsed preview */}
+                {editingAddrIdx !== idx && (
+                  <p className="addr-preview">
+                    {[addr.address1, addr.city, addr.state, addr.pinCode, addr.country]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+                )}
+
+                {/* Expanded editor */}
+                {editingAddrIdx === idx && (
+                  <div className="addr-editor">
+                    <div className="addr-grid">
+                      {/* Address Type */}
+                      <div className="eform-group">
+                        <label>Address Type</label>
+                        <select
+                          value={addr.addressType}
+                          onChange={(e) => updateAddressField(idx, "addressType", e.target.value)}
+                        >
+                          {["Home", "Office", "Other"].map((t) => (
+                            <option key={t} value={t}>{t}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Street Address */}
+                      <div className="eform-group" style={{ gridColumn: "1 / -1" }}>
+                        <label>Street Address *</label>
+                        <input
+                          type="text" placeholder="House no, Street name"
+                          value={addr.address1}
+                          onChange={(e) => updateAddressField(idx, "address1", e.target.value)}
+                          className={errors[`addr_${idx}_address1`] ? "input-error" : ""}
+                        />
+                        {errors[`addr_${idx}_address1`] && (
+                          <small className="ferror">{errors[`addr_${idx}_address1`]}</small>
+                        )}
+                      </div>
+
+                      {/* Address Line 2 */}
+                      <div className="eform-group" style={{ gridColumn: "1 / -1" }}>
+                        <label>Apartment / Suite (optional)</label>
+                        <input
+                          type="text" placeholder="Apt, Suite, Landmark"
+                          value={addr.address2}
+                          onChange={(e) => updateAddressField(idx, "address2", e.target.value)}
+                        />
+                      </div>
+
+                      {/* City */}
+                      <div className="eform-group">
+                        <label>City *</label>
+                        <input
+                          type="text" placeholder="City"
+                          value={addr.city}
+                          onChange={(e) => updateAddressField(idx, "city", e.target.value)}
+                          className={errors[`addr_${idx}_city`] ? "input-error" : ""}
+                        />
+                        {errors[`addr_${idx}_city`] && (
+                          <small className="ferror">{errors[`addr_${idx}_city`]}</small>
+                        )}
+                      </div>
+
+                      {/* State */}
+                      <div className="eform-group">
+                        <label>State</label>
+                        <input
+                          type="text" placeholder="State"
+                          value={addr.state}
+                          onChange={(e) => updateAddressField(idx, "state", e.target.value)}
+                        />
+                      </div>
+
+                      {/* PIN Code */}
+                      <div className="eform-group">
+                        <label>PIN Code *</label>
+                        <input
+                          type="text" placeholder="PIN Code"
+                          value={addr.pinCode}
+                          onChange={(e) => updateAddressField(idx, "pinCode", e.target.value)}
+                          className={errors[`addr_${idx}_pinCode`] ? "input-error" : ""}
+                        />
+                        {errors[`addr_${idx}_pinCode`] && (
+                          <small className="ferror">{errors[`addr_${idx}_pinCode`]}</small>
+                        )}
+                      </div>
+
+                      {/* Country */}
+                      <div className="eform-group">
+                        <label>Country</label>
+                        <input
+                          type="text" placeholder="Country Code (e.g. IN)"
+                          value={addr.country}
+                          onChange={(e) => updateAddressField(idx, "country", e.target.value)}
+                        />
+                      </div>
+
+                      {/* Phone */}
+                      <div className="eform-group">
+                        <label>Phone Number</label>
+                        <input
+                          type="tel" placeholder="+91 XXXXXXXXXX"
+                          value={addr.phoneNumber}
+                          onChange={(e) => updateAddressField(idx, "phoneNumber", e.target.value)}
+                        />
+                      </div>
+
+                      {/* Default toggle */}
+                      <div className="eform-group addr-default-row">
+                        <label className="addr-default-label">
+                          <input
+                            type="checkbox"
+                            checked={addr.isDefault}
+                            onChange={(e) => updateAddressField(idx, "isDefault", e.target.checked)}
+                          />
+                          <span>Set as default address</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          <div className="eform-group">
-            <label>Confirm Password</label>
-            <input
-              name="confirmPassword" type="password" placeholder="Repeat new password"
-              value={form.confirmPassword} onChange={handleChange}
-              className={errors.confirmPassword ? "input-error" : ""}
-            />
-            {errors.confirmPassword && <small className="ferror">{errors.confirmPassword}</small>}
-          </div>
-        </div>
+        )}
 
+        {/* Footer */}
         <div className="emodal-footer">
           <button className="ebtn-cancel" onClick={onClose}>Cancel</button>
           <button className="ebtn-save" onClick={handleSubmit} disabled={saving}>
@@ -196,10 +441,10 @@ const EditUserModal = ({ user, onClose, onSave }) => {
   );
 };
 
-// ─── Main UserDetail Component ────────────────────────────────────────────────
+// ─── Main UserDetail Component ─────────────────────────────
 const UserDetail = () => {
   const { id } = useParams();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -208,19 +453,18 @@ const UserDetail = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
 
-  // ── Fetch user detail + orders in parallel ────────────────────────────────
+  // ── Fetch user detail + orders ──────────────────────────
   useEffect(() => {
     const load = async () => {
       try {
         const [userRes, ordersRes] = await Promise.all([
-          axios.get(`${server}/admin/users/${id}`, { withCredentials: true }),
-          axios.get(`${server}/admin/users/${id}/orders`, { withCredentials: true }),
+          axios.get(`${server}/admin/user/${id}`, { withCredentials: true }),
+          axios.get(`${server}/admin/user/${id}/orders`, { withCredentials: true }),
         ]);
         setUser(userRes.data.user);
         setOrders(ordersRes.data.orders || []);
       } catch (err) {
-        console.error(err);
-        toast.error(err.response?.data?.message || "Failed to load user details");
+        toast.error("Failed to load user details");
       } finally {
         setLoading(false);
       }
@@ -228,36 +472,36 @@ const UserDetail = () => {
     load();
   }, [id]);
 
-  // ── Toggle status ──────────────────────────────────────────────────────────
+  // ── Toggle Active/Suspended ─────────────────────────────
   const handleToggleStatus = async () => {
     try {
       const { data } = await axios.put(
-        `${server}/admin/users/${id}/toggle`,
+        `${server}/admin/user/${id}/toggle`,
         {},
         { withCredentials: true }
       );
-      setUser((prev) => ({ ...prev, status: data.status }));
+      setUser((prev) => ({ ...prev, status: data.status, isActive: data.status === "Active" }));
       toast.success(`User ${data.status === "Active" ? "activated" : "suspended"}`);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to update status");
+    } catch {
+      toast.error("Failed to update status");
     }
   };
 
-  // ── Delete ─────────────────────────────────────────────────────────────────
+  // ── Delete ──────────────────────────────────────────────
   const handleDelete = async () => {
     try {
-      await axios.delete(`${server}/admin/users/${id}`, { withCredentials: true });
+      await axios.delete(`${server}/admin/user/${id}`, { withCredentials: true });
       toast.success("User deleted");
-      history.push("/admin/users");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to delete user");
+      navigate("/admin/users");
+    } catch {
+      toast.error("Failed to delete user");
     }
   };
 
-  // ── Stats derived from orders ──────────────────────────────────────────────
+  // ── Stats ───────────────────────────────────────────────
   const stats = {
     totalOrders: orders.length,
-    totalSpent: orders.reduce((sum, o) => sum + (o.totalPrice || o.totalAmount || 0), 0),
+    totalSpent: orders.reduce((sum, o) => sum + (o.totalPrice || 0), 0),
     delivered: orders.filter((o) => o.orderStatus === "Delivered").length,
     pending: orders.filter((o) => o.orderStatus === "Processing").length,
   };
@@ -272,25 +516,20 @@ const UserDetail = () => {
   const orderBadge = (status) => {
     const map = {
       Processing: { bg: "#fef3c7", color: "#92400e" },
-      Confirmed: { bg: "#dbeafe", color: "#1e3a8a" },
-      Preparing: { bg: "#ede9fe", color: "#5b21b6" },
-      "Out for Delivery": { bg: "#e0f2fe", color: "#0c4a6e" },
+      Confirmed: { bg: "#ede9fe", color: "#6d28d9" },
+      Preparing: { bg: "#dbeafe", color: "#1e40af" },
+      "Out for Delivery": { bg: "#e0f2fe", color: "#0369a1" },
       Delivered: { bg: "#d1fae5", color: "#065f46" },
       Cancelled: { bg: "#fee2e2", color: "#991b1b" },
     };
     const s = map[status] || { bg: "#f1f5f9", color: "#475569" };
     return (
-      <span style={{
-        background: s.bg, color: s.color,
-        padding: "0.25rem 0.65rem", borderRadius: "20px",
-        fontSize: "0.72rem", fontWeight: 700,
-      }}>
+      <span style={{ background: s.bg, color: s.color, padding: "0.25rem 0.65rem", borderRadius: "20px", fontSize: "0.72rem", fontWeight: 700 }}>
         {status}
       </span>
     );
   };
 
-  // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <section className="ud-page">
@@ -308,7 +547,7 @@ const UserDetail = () => {
         <div className="ud-not-found">
           <MdWarning className="ud-nf-icon" />
           <h2>User Not Found</h2>
-          <button className="ud-back-btn" onClick={() => history.push("/admin/users")}>
+          <button className="ud-back-btn" onClick={() => navigate("/admin/users")}>
             <MdArrowBack /> Back to Users
           </button>
         </div>
@@ -323,7 +562,7 @@ const UserDetail = () => {
     <section className="ud-page">
       <Helmet><title>{user.name} | Admin</title></Helmet>
 
-      {/* Edit Modal */}
+      {/* ── Edit Modal ── */}
       <AnimatePresence>
         {showEdit && (
           <EditUserModal
@@ -334,7 +573,7 @@ const UserDetail = () => {
         )}
       </AnimatePresence>
 
-      {/* Delete Modal */}
+      {/* ── Delete Confirm Modal ── */}
       <AnimatePresence>
         {deleteModal && (
           <motion.div
@@ -361,15 +600,11 @@ const UserDetail = () => {
         )}
       </AnimatePresence>
 
-      <motion.div
-        className="ud-inner"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-      >
-        {/* Top bar */}
+      <motion.div className="ud-inner" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
+
+        {/* ── Top bar ── */}
         <div className="ud-topbar">
-          <button className="ud-back-btn" onClick={() => history.push("/admin/users")}>
+          <button className="ud-back-btn" onClick={() => navigate("/admin/users")}>
             <MdArrowBack /> Back to Users
           </button>
           <div className="ud-topbar-actions">
@@ -388,12 +623,12 @@ const UserDetail = () => {
           </div>
         </div>
 
-        {/* Profile hero */}
+        {/* ── Profile hero ── */}
         <motion.div className="ud-hero" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <div className="ud-hero-left">
             <div className="ud-avatar-wrap">
               <img
-                src={user.photo || "https://via.placeholder.com/150?text=User"}
+                src={user.photo?.url || user.photo || "https://via.placeholder.com/150?text=User"}
                 alt={user.name}
                 className="ud-avatar"
               />
@@ -418,11 +653,11 @@ const UserDetail = () => {
             <div className="ud-contact-item"><MdEmail className="ud-ci-icon" /><span>{user.email}</span></div>
             {user.phone && <div className="ud-contact-item"><MdPhone className="ud-ci-icon" /><span>{user.phone}</span></div>}
             <div className="ud-contact-item"><MdCalendarToday className="ud-ci-icon" /><span>Joined {fmt(user.createdAt)}</span></div>
-            <div className="ud-contact-item"><MdAccessTime className="ud-ci-icon" /><span>Last active: {fmtTime(user.lastActive || user.lastLogin)}</span></div>
+            <div className="ud-contact-item"><MdAccessTime className="ud-ci-icon" /><span>Last login: {fmtTime(user.lastLogin)}</span></div>
           </div>
         </motion.div>
 
-        {/* Quick stats */}
+        {/* ── Quick stats ── */}
         <motion.div className="ud-stats-row" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}>
           <div className="ud-stat-card">
             <div className="ud-stat-icon orders"><FiPackage /></div>
@@ -454,7 +689,7 @@ const UserDetail = () => {
           </div>
         </motion.div>
 
-        {/* Tabs */}
+        {/* ── Tabs ── */}
         <div className="ud-tabs">
           {tabs.map((t) => (
             <button
@@ -467,18 +702,15 @@ const UserDetail = () => {
           ))}
         </div>
 
-        {/* Tab panels */}
+        {/* ── Tab Panels ── */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
             className="ud-tab-panel"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.22 }}
           >
-
-            {/* OVERVIEW */}
+            {/* ══ OVERVIEW ══ */}
             {activeTab === "overview" && (
               <div className="ud-overview">
                 <div className="ud-section-card">
@@ -487,21 +719,27 @@ const UserDetail = () => {
                     {[
                       ["Full Name", user.name],
                       ["Email Address", user.email],
-                      ["Phone", user.phone || "Not provided"],
-                      ["Role", <span style={{ textTransform: "capitalize" }}>{user.role}</span>],
-                      ["Account Status", <span style={{ color: sc.color }}>{user.status}</span>],
+                      ["Role", user.role],
+                      ["Account Status", user.status],
+                      ["Auth Provider", user.authProvider || "local"],
                       ["Member Since", fmt(user.createdAt)],
-                      ["Last Login", fmtTime(user.lastActive || user.lastLogin)],
-                      ["User ID", <span className="ud-mono">{user._id}</span>],
+                      ["Last Login", fmtTime(user.lastLogin)],
+                      ["User ID", user._id],
                     ].map(([label, value]) => (
                       <div key={label} className="ud-info-item">
                         <span className="ud-info-label">{label}</span>
-                        <span className="ud-info-value">{value}</span>
+                        <span className="ud-info-value" style={label === "User ID" ? { fontFamily: "monospace", fontSize: "0.75rem" } : {}}>
+                          {value || "—"}
+                        </span>
                       </div>
                     ))}
                   </div>
+                  <button className="ud-edit-inline-btn" onClick={() => setShowEdit(true)}>
+                    <MdEdit /> Edit Profile
+                  </button>
                 </div>
 
+                {/* Recent orders preview */}
                 <div className="ud-section-card">
                   <div className="ud-section-header">
                     <h4 className="ud-section-title"><FiPackage /> Recent Orders</h4>
@@ -518,7 +756,7 @@ const UserDetail = () => {
                             <span className="ud-or-date">{fmt(o.createdAt)}</span>
                           </div>
                           <div className="ud-or-right">
-                            <span className="ud-or-price">₹{(o.totalPrice || o.totalAmount || 0).toLocaleString("en-IN")}</span>
+                            <span className="ud-or-price">₹{o.totalPrice?.toLocaleString("en-IN")}</span>
                             {orderBadge(o.orderStatus)}
                           </div>
                         </div>
@@ -529,7 +767,7 @@ const UserDetail = () => {
               </div>
             )}
 
-            {/* ORDERS */}
+            {/* ══ ORDERS ══ */}
             {activeTab === "orders" && (
               <div className="ud-section-card">
                 <h4 className="ud-section-title"><FiPackage /> All Orders ({orders.length})</h4>
@@ -541,22 +779,18 @@ const UserDetail = () => {
                 ) : (
                   <div className="ud-orders-table">
                     <div className="ud-ot-header">
-                      <span>Order ID</span>
-                      <span>Date</span>
-                      <span>Items</span>
-                      <span>Total</span>
-                      <span>Payment</span>
-                      <span>Status</span>
+                      <span>Order ID</span><span>Date</span><span>Items</span>
+                      <span>Total</span><span>Payment</span><span>Status</span>
                     </div>
                     {orders.map((o) => (
                       <div key={o._id} className="ud-ot-row">
                         <span className="ud-mono ud-ot-id">#{o._id?.slice(-6)}</span>
                         <span>{fmt(o.createdAt)}</span>
                         <span>{o.orderItems?.length || 0} item{o.orderItems?.length !== 1 ? "s" : ""}</span>
-                        <span className="ud-ot-price">₹{(o.totalPrice || o.totalAmount || 0).toLocaleString("en-IN")}</span>
+                        <span className="ud-ot-price">₹{o.totalPrice?.toLocaleString("en-IN")}</span>
                         <span>
-                          <span className={`ud-pay-badge ${o.paymentInfo?.status === "succeeded" || o.isPaid ? "paid" : "pending"}`}>
-                            {o.paymentInfo?.status === "succeeded" || o.isPaid ? "Paid" : "Pending"}
+                          <span className={`ud-pay-badge ${o.isPaid ? "paid" : "pending"}`}>
+                            {o.isPaid ? "Paid" : "Pending"}
                           </span>
                         </span>
                         <span>{orderBadge(o.orderStatus)}</span>
@@ -567,14 +801,19 @@ const UserDetail = () => {
               </div>
             )}
 
-            {/* ADDRESSES */}
+            {/* ══ ADDRESSES ══ */}
             {activeTab === "addresses" && (
               <div className="ud-section-card">
-                <h4 className="ud-section-title"><FiMapPin /> Saved Addresses</h4>
+                <div className="ud-section-header">
+                  <h4 className="ud-section-title"><FiMapPin /> Saved Addresses</h4>
+                  <button className="ud-see-all" onClick={() => { setShowEdit(true); }}>
+                    <MdEdit /> Edit Addresses
+                  </button>
+                </div>
                 {(!user.addresses || user.addresses.length === 0) ? (
                   <div className="ud-empty-block">
                     <FiMapPin className="ud-empty-icon" />
-                    <p>No saved addresses found.</p>
+                    <p>No saved addresses. Click "Edit Addresses" to add some.</p>
                   </div>
                 ) : (
                   <div className="ud-address-grid">
@@ -601,7 +840,7 @@ const UserDetail = () => {
               </div>
             )}
 
-            {/* ACTIVITY */}
+            {/* ══ ACTIVITY ══ */}
             {activeTab === "activity" && (
               <div className="ud-activity-wrap">
                 <div className="ud-section-card">
@@ -614,22 +853,22 @@ const UserDetail = () => {
                         <p className="ud-tl-time">{fmtTime(user.createdAt)}</p>
                       </div>
                     </div>
-                    {(user.lastActive || user.lastLogin) && (
+                    {user.lastLogin && (
                       <div className="ud-tl-item">
                         <div className="ud-tl-dot active" />
                         <div className="ud-tl-body">
                           <p className="ud-tl-event">Last Login</p>
-                          <p className="ud-tl-time">{fmtTime(user.lastActive || user.lastLogin)}</p>
+                          <p className="ud-tl-time">{fmtTime(user.lastLogin)}</p>
                         </div>
                       </div>
                     )}
-                    {orders.slice(0, 8).map((o) => (
+                    {orders.slice(0, 5).map((o) => (
                       <div key={o._id} className="ud-tl-item">
                         <div className="ud-tl-dot order" />
                         <div className="ud-tl-body">
                           <p className="ud-tl-event">
                             Placed order <span className="ud-mono">#{o._id?.slice(-6)}</span>
-                            {" — "}₹{(o.totalPrice || o.totalAmount || 0).toLocaleString("en-IN")}
+                            {" — "}₹{o.totalPrice?.toLocaleString("en-IN")}
                           </p>
                           <p className="ud-tl-time">{fmtTime(o.createdAt)}</p>
                         </div>
@@ -649,8 +888,8 @@ const UserDetail = () => {
                         </p>
                         <p className="ud-danger-desc">
                           {user.status === "Active"
-                            ? "Prevent this user from logging in and using the platform."
-                            : "Restore access for this user to log in and use the platform."}
+                            ? "Prevent this user from logging in."
+                            : "Restore this user's access."}
                         </p>
                       </div>
                       <button
@@ -660,14 +899,12 @@ const UserDetail = () => {
                         {user.status === "Active" ? <><MdBlock /> Suspend</> : <><MdCheckCircle /> Activate</>}
                       </button>
                     </div>
-
                     <div className="ud-danger-divider" />
-
                     <div className="ud-danger-row">
                       <div>
                         <p className="ud-danger-label delete">Delete Account</p>
                         <p className="ud-danger-desc">
-                          Permanently delete this user and all associated data. This cannot be undone.
+                          Permanently delete this user and all associated data. Cannot be undone.
                         </p>
                       </div>
                       <button className="ud-danger-btn delete" onClick={() => setDeleteModal(true)}>
@@ -678,10 +915,8 @@ const UserDetail = () => {
                 </div>
               </div>
             )}
-
           </motion.div>
         </AnimatePresence>
-
       </motion.div>
     </section>
   );
