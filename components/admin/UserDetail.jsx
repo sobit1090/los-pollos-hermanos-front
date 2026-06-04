@@ -130,7 +130,7 @@ const EditUserModal = ({ user, onClose, onSave }) => {
       formData.append("addresses", JSON.stringify(addresses));
 
       const { data } = await axios.put(
-        `${server}/admin/user/${user._id}`,
+        `${server}/admin/users/${user._id}`,
         formData,
         { withCredentials: true, headers: { "Content-Type": "multipart/form-data" } }
       );
@@ -458,8 +458,8 @@ const UserDetail = () => {
     const load = async () => {
       try {
         const [userRes, ordersRes] = await Promise.all([
-          axios.get(`${server}/admin/user/${id}`, { withCredentials: true }),
-          axios.get(`${server}/admin/user/${id}/orders`, { withCredentials: true }),
+          axios.get(`${server}/admin/users/${id}`, { withCredentials: true }),
+          axios.get(`${server}/admin/users/${id}/orders`, { withCredentials: true }),
         ]);
         setUser(userRes.data.user);
         setOrders(ordersRes.data.orders || []);
@@ -476,7 +476,7 @@ const UserDetail = () => {
   const handleToggleStatus = async () => {
     try {
       const { data } = await axios.put(
-        `${server}/admin/user/${id}/toggle`,
+        `${server}/admin/users/${id}/toggle`,
         {},
         { withCredentials: true }
       );
@@ -490,7 +490,7 @@ const UserDetail = () => {
   // ── Delete ──────────────────────────────────────────────
   const handleDelete = async () => {
     try {
-      await axios.delete(`${server}/admin/user/${id}`, { withCredentials: true });
+      await axios.delete(`${server}/admin/users/${id}`, { withCredentials: true });
       toast.success("User deleted");
       navigate("/admin/users");
     } catch {
