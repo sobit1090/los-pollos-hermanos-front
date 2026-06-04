@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Helmet } from "react-helmet";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { server } from "../../redux/store";
 import {
   FiCreditCard,
   FiDollarSign,
@@ -14,10 +17,11 @@ import {
 
 function ConfirmOrder() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [selectedPayment, setSelectedPayment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ✅ Get cart data + serviceType from Redux
+  // ✅ Get cart data + serviceType + shipping from Redux
   const {
     cartItems = [],
     subTotal = 0,
@@ -25,50 +29,187 @@ function ConfirmOrder() {
     shippingCharges = 0,
     total = 0,
     serviceType = "",
+    shippingInfo = {},
   } = useSelector((state) => state.cart || {});
 
-  // ✅ Order summary
-  const orderSummary = {
-    items: cartItems.map((item) => ({
-      name: item.name,
-      quantity: item.quantity,
-      price: item.price,
-    })),
-    subtotal: subTotal,
-    tax,
-    shipping: shippingCharges,
-    total,
+  const orderItems = cartItems.map((item) => ({
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    image: item.image || "",
+  }));
+
+  // ─── Razorpay Script Loader ─────────────────────────────
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const existing = document.getElementById("razorpay-sdk");
+      if (existing) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.id = "razorpay-sdk";
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
   };
 
-  // ✅ Base payment options
+  // ─── Handle Payment Submit ──────────────────────────────
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedPayment) return;
+    setIsSubmitting(true);
+
+    try {
+      // ----- COD / Pay At Counter -----
+      if (selectedPayment === "cod" || selectedPayment === "pac") {
+        const { data } = await axios.post(
+          `${server}/createorder`,
+          {
+            shippingInfo:
+              serviceType === "delivery"
+                ? shippingInfo
+                : {
+                    name: "Dine-in / Takeaway",
+                    houseNo: "N/A",
+                    city: "N/A",
+                    state: "N/A",
+                    country: "IN",
+                    pinCode: "000000",
+                    phone: "N/A",
+                  },
+            orderItems,
+            paymentMethod: selectedPayment,
+            serviceType: serviceType || "dinein",
+            itemsPrice: subTotal,
+            taxPrice: tax,
+            shippingCharges,
+            totalAmount: total,
+          },
+          { withCredentials: true }
+        );
+
+        // Empty cart after order placed
+        dispatch({ type: "emptyState" });
+        toast.success("Order placed successfully! 🎉");
+        navigate("/CashOnDelivery");
+        return;
+      }
+
+      // ----- Razorpay Online Payment -----
+      const loaded = await loadRazorpayScript();
+      if (!loaded) {
+        toast.error("Failed to load payment gateway. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Step 1 – Create Razorpay order on backend
+      const { data: orderData } = await axios.post(
+        `${server}/createorderonline`,
+        { amount: total },
+        { withCredentials: true }
+      );
+
+      const razorpayOrderId = orderData.razorpayOrder.id;
+
+      // Step 2 – Get Razorpay Key from backend (via public env)
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY || "", // can be set in .env
+        amount: Math.round(total * 100),
+        currency: "INR",
+        name: "Los Pollos Hermanos",
+        description: "Food Order Payment",
+        order_id: razorpayOrderId,
+        handler: async function (response) {
+          try {
+            // Step 3 – Verify payment on backend
+            const orderOptions = {
+              shippingInfo:
+                serviceType === "delivery"
+                  ? shippingInfo
+                  : {
+                      name: "Dine-in / Takeaway",
+                      houseNo: "N/A",
+                      city: "N/A",
+                      state: "N/A",
+                      country: "IN",
+                      pinCode: "000000",
+                      phone: "N/A",
+                    },
+              orderItems,
+              serviceType: serviceType || "dinein",
+              itemsPrice: subTotal,
+              taxPrice: tax,
+              shippingCharges,
+              totalAmount: total,
+            };
+
+            const { data: verifyData } = await axios.post(
+              `${server}/paymentverification`,
+              {
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                orderOptions,
+              },
+              { withCredentials: true }
+            );
+
+            dispatch({ type: "emptyState" });
+            toast.success("Payment successful! 🎉");
+            navigate("/CashOnDelivery");
+          } catch (err) {
+            toast.error(err.response?.data?.message || "Payment verification failed.");
+          }
+        },
+        prefill: {
+          name: shippingInfo?.name || "",
+          contact: shippingInfo?.phone || "",
+        },
+        theme: { color: "#dc2626" },
+        modal: {
+          ondismiss: function () {
+            toast("Payment cancelled. You can try again.", { icon: "ℹ️" });
+            setIsSubmitting(false);
+          },
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+      setIsSubmitting(false);
+      return;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // ─── Payment Methods ────────────────────────────────────
   const baseMethods = [
     {
       id: "online",
       name: "Online Payment",
-      description: "Pay securely with your card or UPI",
+      description: "Pay securely with your card or UPI via Razorpay",
       icon: FiCreditCard,
-      benefits: [
-        "Instant confirmation",
-        "Secure encryption",
-        "Multiple options",
-      ],
+      benefits: ["Instant confirmation", "Secure encryption", "Multiple options"],
       deliveryTime: "25-40 mins",
     },
   ];
 
-  // ✅ Conditional payment based on serviceType
   let paymentMethods = [...baseMethods];
 
-  if (serviceType === "dinein"|| serviceType==="takeaway") {
+  if (serviceType === "dinein" || serviceType === "takeaway") {
     paymentMethods.unshift({
       id: "pac",
       name: "Pay At Counter",
       description: "Pay directly at the counter",
       icon: FiDollarSign,
-      benefits: [
-        "No online payment required",
-        "Instant confirmation at counter",
-      ],
+      benefits: ["No online payment required", "Instant confirmation at counter"],
       deliveryTime: "Served immediately",
     });
   } else if (serviceType === "delivery") {
@@ -77,29 +218,10 @@ function ConfirmOrder() {
       name: "Cash On Delivery",
       description: "Pay when you receive your order",
       icon: FiDollarSign,
-      benefits: [
-        "No online payment required",
-        "Pay with cash at delivery",
-        "Secure doorstep service",
-      ],
+      benefits: ["No online payment required", "Pay with cash at delivery", "Secure doorstep service"],
       deliveryTime: "30-45 mins",
     });
   }
-
-  // ✅ Handle payment submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedPayment) return;
-    setIsSubmitting(true);
-
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    if (selectedPayment === "cod" || selectedPayment === "pac") {
-      navigate("/CashOnDelivery");
-    } else {
-      navigate("/payment");
-    }
-  };
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -113,8 +235,8 @@ function ConfirmOrder() {
 
   return (
     <section className="confirmOrder">
-       <Helmet>
-        <title>Confirm Order</title>
+      <Helmet>
+        <title>Confirm Order | Los Pollos Hermanos</title>
       </Helmet>
       <motion.main
         initial={{ opacity: 0, y: 30 }}
@@ -122,45 +244,30 @@ function ConfirmOrder() {
         transition={{ duration: 0.6 }}
       >
         <div className="order-header">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             Confirm Your Order
           </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
             Review your order and choose a payment method
           </motion.p>
         </div>
 
         <div className="content-grid">
           {/* 🧾 Order Summary */}
-          <motion.div
-            className="summary-card"
-            variants={itemVariants}
-            initial="hidden"
-            animate="visible"
-          >
+          <motion.div className="summary-card" variants={itemVariants} initial="hidden" animate="visible">
             <div className="card-header">
               <FiCheck className="icon" />
               <h2>Order Summary</h2>
             </div>
 
             <div className="order-items">
-              {orderSummary.items.map((item, index) => (
+              {cartItems.map((item, index) => (
                 <div key={index} className="order-item">
                   <div className="item-info">
                     <span className="item-name">{item.name}</span>
                     <span className="item-quantity">Qty: {item.quantity}</span>
                   </div>
-                  <span className="item-price">
-                    ₹{item.price * item.quantity}
-                  </span>
+                  <span className="item-price">₹{item.price * item.quantity}</span>
                 </div>
               ))}
             </div>
@@ -168,20 +275,20 @@ function ConfirmOrder() {
             <div className="amount-breakdown">
               <div className="amount-row">
                 <span>Subtotal</span>
-                <span>₹{orderSummary.subtotal}</span>
+                <span>₹{subTotal}</span>
               </div>
               <div className="amount-row">
                 <span>Tax (18%)</span>
-                <span>₹{orderSummary.tax}</span>
+                <span>₹{tax}</span>
               </div>
               <div className="amount-row">
                 <span>Delivery</span>
-                <span>₹{orderSummary.shipping}</span>
+                <span>₹{shippingCharges}</span>
               </div>
               <div className="amount-divider"></div>
               <div className="amount-row total">
                 <span>Total Amount</span>
-                <span>₹{orderSummary.total}</span>
+                <span>₹{total}</span>
               </div>
             </div>
           </motion.div>
@@ -200,9 +307,7 @@ function ConfirmOrder() {
               {paymentMethods.map((method) => (
                 <motion.div
                   key={method.id}
-                  className={`payment-option ${
-                    selectedPayment === method.id ? "selected" : ""
-                  }`}
+                  className={`payment-option ${selectedPayment === method.id ? "selected" : ""}`}
                   variants={itemVariants}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -241,7 +346,7 @@ function ConfirmOrder() {
                     </div>
                     <div className="delivery-time">
                       <FiClock />
-                      <span>Estimated delivery: {method.deliveryTime}</span>
+                      <span>Estimated time: {method.deliveryTime}</span>
                     </div>
                   </div>
                 </motion.div>

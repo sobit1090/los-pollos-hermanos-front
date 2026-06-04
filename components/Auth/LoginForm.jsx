@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import {loadUser} from "../../redux/actions/user.js"
 const LoginForm = () => {
   const dispatch=useDispatch();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,7 +30,7 @@ const handleSubmit = async (e) => {
     // ✅ Load user into Redux to update isAuthenticated
     await dispatch(loadUser());
 
-    window.href("/profile");
+    navigate("/profile");
   } catch (error) {
     toast.error(error.response?.data?.message || "Login failed");
   }
@@ -85,7 +85,7 @@ const handleSubmit = async (e) => {
         </div>
       </form>
     </div>
-  );z
+  );
 };
 
 export default LoginForm;

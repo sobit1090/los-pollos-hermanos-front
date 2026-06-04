@@ -17,7 +17,7 @@ const SignupForm = () => {
 
     try {
       const { data } = await axios.post(
-        "https://los-pollos-hermanos-0ui5.onrender.com/api/v1/register",
+        `${server}/register`,
         { name, email, password },
         { withCredentials: true }
       );
