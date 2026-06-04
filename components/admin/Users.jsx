@@ -449,7 +449,7 @@ const navigate = useNavigate();
     transition={{ delay: index * 0.05 }}
 
     onClick={() =>
-      navigate(`/admin/user/${user._id}`)
+      navigate(`/admin/users/${user._id}`)
     }
   >
 
@@ -543,7 +543,7 @@ const navigate = useNavigate();
 
             e.stopPropagation();
 
-            navigate(`/admin/user/${user._id}`);
+             navigate(`/admin/users/${user._id}`);
           }}
         >
           <MdEdit />
