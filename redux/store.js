@@ -53,4 +53,7 @@ store.subscribe(() => {
 
 export default store;
 
-export const server = "https://los-pollos-hermanos-0ui5.onrender.com/api/v1";
+
+
+
+export const server = "https://los-pollos-hermanos-backend.vercel.app/api/v1"
