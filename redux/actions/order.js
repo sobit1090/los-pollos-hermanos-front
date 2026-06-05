@@ -43,7 +43,7 @@ export const createOrder =
     } catch (error) {
       dispatch({
         type: "createOrderFail",
-        payload: error.response.data.message,
+        payload: error.response?.data?.message || "Could not connect to server",
       });
     }
   };
@@ -79,7 +79,7 @@ export const paymentVerification =
     } catch (error) {
       dispatch({
         type: "paymentVerificationFail",
-        payload: error.response.data.message,
+        payload: error.response?.data?.message || "Could not connect to server",
       });
     }
   };
@@ -94,7 +94,7 @@ export const getMyOrders = () => async (dispatch) => {
 
     dispatch({ type: "getMyOrdersSuccess", payload: data.orders });
   } catch (error) {
-    dispatch({ type: "getMyOrdersFail", payload: error.response.data.message });
+    dispatch({ type: "getMyOrdersFail", payload: error.response?.data?.message || "Could not connect to server" });
   }
 };
 
@@ -110,7 +110,7 @@ export const getOrderDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getOrderDetailsFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Could not connect to server",
     });
   }
 };

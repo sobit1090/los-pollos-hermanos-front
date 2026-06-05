@@ -5,6 +5,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Helmet } from "react-helmet";
 import { server } from "../../redux/store";
+import "../../styles/users.scss";
 import {
   MdArrowBack, MdEdit, MdDelete, MdBlock, MdCheckCircle,
   MdEmail, MdCalendarToday, MdShoppingBag,
@@ -13,7 +14,7 @@ import {
   MdLocalShipping, MdPhone, MdAdd, MdLocationOn,
 } from "react-icons/md";
 import { FiUser, FiPackage, FiMapPin, FiActivity, FiHome } from "react-icons/fi";
-import "../../styles/users.scss";
+
 
 // ─── Helpers ──────────────────────────────────────────────
 const fmt = (d) =>

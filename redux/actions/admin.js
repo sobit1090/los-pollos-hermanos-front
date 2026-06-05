@@ -13,7 +13,7 @@ export const getAdminStats = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getDashboardStatsFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Could not connect to server",
     });
   }
 };
@@ -29,7 +29,7 @@ export const getAdminUsers = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAdminUsersFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Could not connect to server",
     });
   }
 };
@@ -46,7 +46,7 @@ export const getAdminOrders = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "getAdminOrdersFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Could not connect to server",
     });
   }
 };
@@ -63,7 +63,7 @@ export const processOrder = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "processOrderFail",
-      payload: error.response.data.message,
+      payload: error.response?.data?.message || "Could not connect to server",
     });
   }
 };
