@@ -56,4 +56,4 @@ export default store;
 
 
 
-export const server = "https://los-pollos-hermanos-backend.vercel.app/api/v1"
+export const server = import.meta.env.VITE_API_URL || "https://los-pollos-hermanos-backend.vercel.app/api/v1";
