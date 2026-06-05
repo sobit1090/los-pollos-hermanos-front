@@ -71,7 +71,7 @@ function App() {
   // Load user once on app start
   useEffect(() => {
     const initializeApp = async () => {
-      const timeout = new Promise((resolve) => setTimeout(resolve, 3000));
+      const timeout = new Promise((resolve) => setTimeout(resolve, 8000));
       const userRequest = dispatch(loadUser());
 
       try {
