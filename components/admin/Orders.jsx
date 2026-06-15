@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineEye } from "react-icons/ai";
 import { GiArmoredBoomerang } from "react-icons/gi";
+import { MdCheck, MdRestaurant, MdDeliveryDining, MdCheckCircle } from "react-icons/md";
 import { Helmet } from "react-helmet";
 import { useDispatch, useSelector } from "react-redux";
 import { getAdminOrders, processOrder } from "../../redux/actions/admin";
@@ -50,6 +51,41 @@ const Orders = () => {
 
   const handleProcess = (id) => {
     dispatch(processOrder(id));
+  };
+
+  const getActionDetails = (status) => {
+    switch (status) {
+      case "Processing":
+        return {
+          text: "Confirm",
+          className: "btn-update confirm",
+          icon: <MdCheck />,
+        };
+      case "Confirmed":
+        return {
+          text: "Prepare",
+          className: "btn-update prepare",
+          icon: <MdRestaurant />,
+        };
+      case "Preparing":
+        return {
+          text: "Out for Delivery",
+          className: "btn-update ship",
+          icon: <MdDeliveryDining />,
+        };
+      case "Out for Delivery":
+        return {
+          text: "Deliver",
+          className: "btn-update deliver",
+          icon: <MdCheckCircle />,
+        };
+      default:
+        return {
+          text: "Process",
+          className: "btn-update",
+          icon: <GiArmoredBoomerang />,
+        };
+    }
   };
 
   if (loading) return <LoadingSpinner message="Loading orders..." />;
@@ -122,16 +158,19 @@ const Orders = () => {
                         <AiOutlineEye />
                         <span>View</span>
                       </Link>
-                      {order.orderStatus !== "Delivered" && order.orderStatus !== "Cancelled" && (
-                        <button
-                          className="btn-update"
-                          title="Advance Order Status"
-                          onClick={() => handleProcess(order._id)}
-                        >
-                          <GiArmoredBoomerang />
-                          <span>Process</span>
-                        </button>
-                      )}
+                      {order.orderStatus !== "Delivered" && order.orderStatus !== "Cancelled" && (() => {
+                        const action = getActionDetails(order.orderStatus);
+                        return (
+                          <button
+                            className={action.className}
+                            title={`Advance to ${action.text}`}
+                            onClick={() => handleProcess(order._id)}
+                          >
+                            {action.icon}
+                            <span>{action.text}</span>
+                          </button>
+                        );
+                      })()}
                     </div>
                   </td>
                 </tr>
