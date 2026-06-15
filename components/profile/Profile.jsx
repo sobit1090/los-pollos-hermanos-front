@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -30,6 +30,7 @@ import {
 const Profile = () => {
 
   const dispatch = useDispatch();
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const authState = useSelector((state) => state.auth);
   const userState = useSelector((state) => state.user);
@@ -337,9 +338,10 @@ const Profile = () => {
 
                 </Link>
 
-                <Link
-                  to="/profile/settings"
+                <div
+                  onClick={() => setShowComingSoon(true)}
                   className="action-card warning"
+                  style={{ cursor: "pointer" }}
                 >
 
                   <div className="action-icon">
@@ -351,11 +353,12 @@ const Profile = () => {
                     <p>Account preferences</p>
                   </div>
 
-                </Link>
+                </div>
 
-                <Link
-                  to="/profile/edit"
+                <div
+                  onClick={() => setShowComingSoon(true)}
                   className="action-card info"
+                  style={{ cursor: "pointer" }}
                 >
 
                   <div className="action-icon">
@@ -367,7 +370,7 @@ const Profile = () => {
                     <p>Update your information</p>
                   </div>
 
-                </Link>
+                </div>
               </>
             )}
 
@@ -399,7 +402,7 @@ const Profile = () => {
 
             </motion.button>
 
-            <button className="btn-secondary">
+            <button className="btn-secondary" onClick={() => setShowComingSoon(true)}>
 
               <MdSettings />
 
@@ -457,6 +460,36 @@ const Profile = () => {
         </motion.div>
 
       </motion.main>
+
+      {showComingSoon && (
+        <div className="coming-soon-modal-overlay" onClick={() => setShowComingSoon(false)}>
+          <motion.div 
+            className="coming-soon-modal-content"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <span className="coming-soon-badge">🔒 FEATURE</span>
+              <button className="close-btn" onClick={() => setShowComingSoon(false)}>&times;</button>
+            </div>
+            <h2>Coming Soon!</h2>
+            <p className="modal-desc">
+              We are working hard to bring you this feature. Thank you for your patience!
+            </p>
+            <div className="modal-contact-box">
+              <p>Right now, if you have any issue, contact the owner or admin:</p>
+              <a href="mailto:sobitgautam811@gmail.com" className="email-link">
+                sobitgautam811@gmail.com
+              </a>
+            </div>
+            <button className="btn-modal-close" onClick={() => setShowComingSoon(false)}>
+              Got it
+            </button>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 };
