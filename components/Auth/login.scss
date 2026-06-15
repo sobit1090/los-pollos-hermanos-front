@@ -149,7 +149,8 @@ form{ width: 100%; }
   display: flex;
   align-items: center;       /* vertically center */
   justify-content: center;   /* horizontally center */
-  min-height: 90vh;         /* take full viewport height */
+  min-height: calc(100vh - 100px); /* center in remaining viewport space */
+  box-sizing: border-box;
 }
 
 
@@ -198,12 +199,13 @@ form{ width: 100%; }
 }
 @media screen and (max-width: 650px){
    
-    .container_1{ height: calc(100vh - 250px); 
-    width: 90vw;
-    margin-bottom:140px ;
-     overflow: hidden;       /* ❌ no scrolling allowed */
-  touch-action: none;
-
+    .container_1{
+      height: 520px; 
+      width: 90vw;
+      max-width: 400px;
+      margin: 0;
+      overflow: hidden;       /* ❌ no scrolling allowed */
+      touch-action: none;
     }
 
     .form-box_1{
