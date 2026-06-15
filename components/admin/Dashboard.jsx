@@ -16,7 +16,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getAdminStats } from "../../redux/actions/admin";
 import LoadingSpinner from "../layout/LoadingSpinner";
-import { FiUsers, FiShoppingCart, FiDollarSign, FiTrendingUp } from "react-icons/fi";
+import { FiUsers, FiShoppingCart, FiDollarSign, FiTrendingUp, FiMessageSquare } from "react-icons/fi";
 
 ChartJS.register(Tooltip, ArcElement, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title);
 
@@ -227,6 +227,11 @@ const Dashboard = () => {
                 <FiTrendingUp />
                 <span>Menu</span>
                 <small>Browse menu items</small>
+              </Link>
+              <Link to="/admin/complaints" className="action-btn info" style={{ background: "linear-gradient(135deg, #8b5cf6, #7c3aed)", borderColor: "#7c3aed" }}>
+                <FiMessageSquare />
+                <span>Complaints</span>
+                <small>User feedback & support</small>
               </Link>
               <div className="action-btn info" style={{ cursor: "default" }}>
                 <FiDollarSign />

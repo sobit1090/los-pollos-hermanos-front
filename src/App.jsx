@@ -26,6 +26,7 @@ import Dashboard from "../components/admin/Dashboard";
 import Orders from "../components/admin/Orders";
 import Users from "../components/admin/Users";
 import UserDetail from "../components/admin/UserDetail";
+import Complaints from "../components/admin/Complaints";
 import About from "../components/home/About";
 import MenuNew from "../components/home/Menu_new";
 import LoadingSpinner from "../components/layout/LoadingSpinner";
@@ -55,6 +56,7 @@ import "../styles/user.scss";
 import "../styles/orders.scss";
 import "../styles/about.scss";
 import "../styles/menu_new.scss";
+import "../styles/complaints.scss";
 import "./App.css";
 import "./index.css";
 
@@ -214,6 +216,19 @@ function App() {
                 redirectAdmin="/"
               >
                 <Users />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/complaints"
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                adminRoute={true}
+                isAdmin={isAdmin}
+                redirectAdmin="/"
+              >
+                <Complaints />
               </ProtectedRoute>
             }
           />

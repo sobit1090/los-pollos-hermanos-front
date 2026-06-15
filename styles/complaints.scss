@@ -1,0 +1,316 @@
+@use "colors" as *;
+
+.complaints-admin-main {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// ─── Badges ───────────────────────────────────────────
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &.badge-complaint {
+    background-color: $danger-light;
+    color: $danger;
+    border: 1px solid $danger-border;
+  }
+
+  &.badge-contact {
+    background-color: $success-light;
+    color: $success-dark;
+    border: 1px solid $success-border;
+  }
+}
+
+// ─── Table Specifics ──────────────────────────────────
+.complaints-grid-header,
+.complaints-grid-row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 2fr 1fr 3fr 1.5fr 1fr;
+  align-items: center;
+  gap: 1rem;
+}
+
+.complaint-name {
+  font-weight: 600;
+  color: $dark;
+}
+
+.complaint-email {
+  color: $darklight;
+  font-size: 0.9rem;
+}
+
+.complaint-msg-trunc {
+  color: $dark;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}
+
+// ─── Detail Modal ─────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.complaint-detail-modal {
+  background: white;
+  width: 100%;
+  max-width: 650px;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+
+  .modal-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: #f1f3f5;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    color: #495057;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #e9ecef;
+      color: $red;
+      transform: rotate(90deg);
+    }
+  }
+
+  .modal-header-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border-bottom: 2px solid #f1f3f5;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    h3 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: $dark;
+      margin: 0;
+    }
+
+    .modal-entry-id {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: #999;
+      background: #f8f9fa;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+  }
+
+  .modal-detail-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+
+      .detail-label {
+        font-size: 0.8rem;
+        color: #999;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        svg {
+          color: $red;
+          font-size: 1rem;
+        }
+      }
+
+      .detail-value {
+        font-size: 1.05rem;
+        color: $dark;
+        font-weight: 500;
+
+        a {
+          color: $red;
+          text-decoration: none;
+          border-bottom: 1px dashed $red;
+          transition: all 0.2s ease;
+
+          &:hover {
+            color: $reddark;
+            border-bottom-style: solid;
+          }
+        }
+      }
+
+      &.message-detail {
+        .message-content-box {
+          background: #f8f9fa;
+          border-radius: 12px;
+          padding: 1.25rem;
+          color: #333;
+          font-size: 1rem;
+          line-height: 1.6;
+          border: 1px solid #e9ecef;
+          white-space: pre-wrap;
+          word-break: break-word;
+          max-height: 250px;
+          overflow-y: auto;
+        }
+      }
+    }
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    border-top: 2px solid #f1f3f5;
+    padding-top: 1.5rem;
+
+    .btn-secondary {
+      background: #f1f3f5;
+      color: #495057;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: #e9ecef;
+      }
+    }
+
+    .btn-primary {
+      background: $red;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(156, 0, 60, 0.2);
+
+      &:hover {
+        background: $reddark;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(156, 0, 60, 0.3);
+      }
+    }
+  }
+}
+
+// ─── Responsive Adjustments ───────────────────────────
+@media screen and (max-width: 1024px) {
+  .complaints-grid-header,
+  .complaints-grid-row {
+    grid-template-columns: 0.8fr 1.2fr 1.5fr 1fr 2fr 1.2fr 1fr;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .complaint-card {
+    cursor: pointer;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .mc-message-preview {
+    margin: 0.75rem 0;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+
+    .msg-title {
+      font-size: 0.75rem;
+      color: #999;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+    }
+
+    .msg-text {
+      font-size: 0.85rem;
+      color: #495057;
+      line-height: 1.4;
+      margin: 0;
+    }
+  }
+
+  .complaint-detail-modal {
+    padding: 1.75rem;
+    border-radius: 20px;
+
+    .modal-header-section {
+      h3 {
+        font-size: 1.4rem;
+      }
+    }
+
+    .modal-detail-body {
+      gap: 1.25rem;
+      
+      .detail-item.message-detail .message-content-box {
+        max-height: 180px;
+      }
+    }
+    
+    .modal-actions {
+      flex-direction: column;
+      
+      button, a {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}
