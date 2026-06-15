@@ -403,6 +403,8 @@ body.profile-page .footer-nav {
       padding: 1rem;
       border-radius: 14px;
       gap: 1rem;
+      max-height: none;
+      overflow-y: visible;
     }
  .profile-header {
   align-items: center;
