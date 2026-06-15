@@ -95,7 +95,7 @@ const Profile = () => {
         )
       : "March 2026",
 
-    photo: userDetail.photo,
+    photo: userDetail.photo?.url,
 
     orders: userDetail.orders || 0,
 
