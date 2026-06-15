@@ -265,7 +265,7 @@ const Shipping = () => {
               <div className="addresses-grid">
                 {savedAddresses.map((addr, index) => {
                   const countryObj = Country.getCountryByCode(addr.country);
-                  const stateObj = State.getStateOfCountry(addr.country)?.find(s => s.isoCode === addr.state);
+                  const stateObj = State.getStatesOfCountry(addr.country)?.find(s => s.isoCode === addr.state);
                   const countryName = countryObj ? countryObj.name : addr.country;
                   const stateName = stateObj ? stateObj.name : addr.state;
 
