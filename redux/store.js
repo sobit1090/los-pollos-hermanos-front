@@ -18,6 +18,8 @@ function loadCartFromStorage() {
       tax: parsed.tax || 0,
       shippingCharges: parsed.shippingCharges || 0,
       total: parsed.total || 0,
+      shippingInfo: parsed.shippingInfo || {},
+      serviceType: parsed.serviceType || "",
     };
   } catch (e) {
     console.error("Error loading cart from storage:", e);

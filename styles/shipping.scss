@@ -38,7 +38,7 @@
       }
     }
 
-    > form {
+    form {
       .form-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -193,7 +193,7 @@
         }
       }
 
-      > form {
+      form {
         .form-grid {
           grid-template-columns: 1fr;
           gap: 1.25rem;
@@ -228,7 +228,7 @@
         }
       }
 
-      > form {
+      form {
         .form-grid {
           .form-group {
             label {
