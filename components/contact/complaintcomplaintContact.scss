@@ -187,63 +187,128 @@ form { width: 100%; }
 
 .bx { color: $reddark; }
 
-/* 📱 Responsive */
- @media screen and (max-width: 650px) {
+/* 📱 Responsive Mobile View */
+@media screen and (max-width: 768px) {
+  .complaint-container {
+    padding: 1.5rem 1rem;
+    min-height: 85vh;
+  }
+
   .container_2 {
-    height: calc(100vh - 250px);
-    width: 90vw;
-    margin-bottom: 140px;
-  }
-
-  .form-box_2 {
-    bottom: 0;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 70%;
+    max-width: 480px;
+    height: auto;
+    min-height: auto;
+    background: transparent;
+    box-shadow: none;
+    margin: 0;
+    overflow: visible;
+    border-radius: 0;
   }
 
-  .container_2.active_2 .form-box_2 {
-    right: 0;
-    bottom: 30%;
-  }
-
-  .toggle-box_2::before {
-    left: 0;
-    top: -270%;
+  .toggle-box_2 {
+    position: relative;
     width: 100%;
-    height: 300%;
-    border-radius: 20vw;
-  }
+    height: 50px;
+    display: flex;
+    background: #e9ecef;
+    border-radius: 12px;
+    padding: 4px;
+    z-index: 10;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
 
-  .container_2.active_2 .toggle-box_2::before {
-    left: 0;
-    top: 70%;
-  }
-
-  .container_2.active_2 .toggle-panel_2.toggle-left_2 {
-    left: 0;
-    top: -30%;
+    &::before {
+      display: none !important;
+    }
   }
 
   .toggle-panel_2 {
-    width: 100%;
-    height: 30%;
+    position: relative !important;
+    width: 50% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+
+    h1, p {
+      display: none !important;
+    }
+
+    .btn_2 {
+      width: 100% !important;
+      height: 100% !important;
+      background: transparent !important;
+      border: none !important;
+      color: $darklight !important;
+      box-shadow: none !important;
+      font-size: 0.95rem !important;
+      font-weight: 600 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+    }
   }
 
-  .toggle-panel_2.toggle-left_2 { top: 0; }
-
-  .toggle-panel_2.toggle-right_2 {
-    right: 0;
-    bottom: -30%;
+  // Highlight Contact when active_2 is set
+  .container_2.active_2 .toggle-panel_2.toggle-left_2 {
+    background: $red !important;
+    .btn_2 {
+      color: #fff !important;
+    }
   }
 
-  .container_2.active_2 .toggle-panel_2.toggle-right_2 {
-    bottom: 0;
+  // Highlight Complaint when active_2 is not set
+  .container_2:not(.active_2) .toggle-panel_2.toggle-right_2 {
+    background: $red !important;
+    .btn_2 {
+      color: #fff !important;
+    }
   }
-}
 
-@media screen and (max-width: 400px) {
-  .form-box_2 { padding: 20px; }
-  .toggle-panel_2 h1 { font-size: 30px; }
+  .form-box_2 {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    background: #fff !important;
+    border-radius: 20px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08) !important;
+    padding: 2.5rem 1.5rem !important;
+    display: none !important;
+    right: auto !important;
+    left: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transition: none !important;
+
+    form {
+      display: block !important;
+    }
+  }
+
+  // Render the selected form block
+  .container_2.active_2 .form-box_2.contact_2 {
+    display: flex !important;
+  }
+
+  .container_2:not(.active_2) .form-box_2.complaint_2 {
+    display: flex !important;
+  }
+
+  .burger {
+    display: none !important;
+  }
 }
 
 
