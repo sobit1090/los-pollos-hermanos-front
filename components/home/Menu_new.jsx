@@ -104,8 +104,8 @@ const menuData = {
   },
   {
     id: 6,
-    name: "Buffalo Chicken Ranch",
-    description: "Spicy buffalo chicken with ranch dressing and coleslaw",
+    name: "Hot Chicken Ranch",
+    description: "Spicy hot chicken with ranch dressing and coleslaw",
     price: 329,
     category: "chicken",
     image: IMAGES.burger2,
