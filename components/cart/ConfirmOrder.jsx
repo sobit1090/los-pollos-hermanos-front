@@ -63,8 +63,8 @@ function ConfirmOrder() {
     setIsSubmitting(true);
 
     try {
-      // ----- COD / Pay At Counter -----
-      if (selectedPayment === "cod" || selectedPayment === "pac") {
+      // ----- COD / Pay At Counter / Online Payment -----
+      if (selectedPayment === "cod" || selectedPayment === "pac" || selectedPayment === "online") {
         const { data } = await axios.post(
           `${server}/createorder`,
           {

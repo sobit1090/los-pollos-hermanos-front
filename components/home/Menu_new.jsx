@@ -29,9 +29,9 @@ const menuData = {
   // Signature Burgers
   {
     id: 1,
-    name: "The Classic Supreme",
+    name: "The Chicken Supreme",
     description:
-      "Our signature beef patty with aged cheddar, crispy bacon, fresh lettuce, tomato, and special sauce",
+      "Our signature crispy chicken patty with aged cheddar, crispy chicken bits, fresh lettuce, tomato, and special sauce",
     price: 399,
     category: "signature",
     image: IMAGES.burger1,
@@ -44,9 +44,9 @@ const menuData = {
   },
   {
     id: 2,
-    name: "Double Trouble Burger",
+    name: "Double Trouble Chicken Burger",
     description:
-      "Double beef patties, double cheese, caramelized onions, and smoky BBQ sauce",
+      "Double chicken patties, double cheese, caramelized onions, and smoky BBQ sauce",
     price: 499,
     category: "signature",
     image: IMAGES.burger1,
@@ -74,9 +74,9 @@ const menuData = {
   },
   {
     id: 4,
-    name: "Mushroom Swiss Bliss",
+    name: "Chicken Mushroom Swiss Bliss",
     description:
-      "Beef patty with sautéed mushrooms, Swiss cheese, and garlic aioli",
+      "Grilled chicken patty with sautéed mushrooms, Swiss cheese, and garlic aioli",
     price: 379,
     category: "signature",
     image: IMAGES.burger1,

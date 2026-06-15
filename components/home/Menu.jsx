@@ -16,8 +16,8 @@ function Menu() {
   const menuItems = [
     {
       id: 1,
-      title: "Classic Cheese Burger",
-      description: "Juicy beef patty with melted cheese and fresh veggies",
+      title: "Classic Chicken Cheese Burger",
+      description: "Juicy chicken patty with melted cheese and fresh veggies",
       price: 299,
       image:IMAGES.burger1,
       popular: true
