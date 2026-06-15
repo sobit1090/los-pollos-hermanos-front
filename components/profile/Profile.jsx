@@ -102,30 +102,19 @@ const Profile = () => {
     role: userDetail.role || "user",
   };
 
-  const logoutHandler = async () => {
-    try {
-      await axios.get(`${server}/logout`, {
-        withCredentials: true,
-      });
+  const logoutHandler = () => {
+    dispatch({
+      type: "logoutSuccess",
+      payload: "Logged out successfully",
+    });
 
-      dispatch({
-        type: "logoutSuccess",
-        payload: "Logged out successfully",
-      });
+    dispatch({
+      type: "emptyState",
+    });
 
-      dispatch({
-        type: "emptyState",
-      });
+    localStorage.removeItem("cart");
 
-      localStorage.removeItem("cart");
-
-      window.location.href = "/login";
-
-    } catch (error) {
-      console.error(error);
-
-      toast.error("Logout failed");
-    }
+    window.location.href = `${server}/logout?redirect=${window.location.origin}/login`;
   };
 
   const handlePhotoChange = async (e) => {
