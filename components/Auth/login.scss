@@ -207,7 +207,7 @@ form {
         min-height: calc(100vh - 110px);
         padding: 8px;
         border: red;
-        background-color: yellow;
+
     }
 
     .container_1 {
@@ -216,6 +216,7 @@ form {
         height: calc(100vh - 150px);
         margin: 0;
         border-radius: 25px;
+        background-color: yellow;
         overflow: hidden;
     }
 
