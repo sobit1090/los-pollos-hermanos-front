@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -6,11 +6,17 @@ import { Helmet } from "react-helmet";
 import { server } from "../../redux/store";
 import { useDispatch } from "react-redux";
 import {loadUser} from "../../redux/actions/user.js"
-const LoginForm = () => {
+const LoginForm = ({ email, setEmail, password, setPassword }) => {
   const dispatch=useDispatch();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+
+  // Autofill admin credentials on mobile devices on mount
+  useEffect(() => {
+    if (window.innerWidth <= 650) {
+      setEmail("admin@gmail.com");
+      setPassword("admin123");
+    }
+  }, [setEmail, setPassword]);
 
 const handleSubmit = async (e) => {
   e.preventDefault();

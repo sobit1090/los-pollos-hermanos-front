@@ -150,6 +150,7 @@
      min-height: calc(100vh - 140px);
      padding: 10px;
      box-sizing: border-box;
+     gap: 30px;
  }
 
  .toggle-panel_1 {
@@ -298,4 +299,100 @@
 
  .googlepointer {
      cursor: pointer;
+ }
+
+ .demo-credentials-card {
+     width: 300px;
+     background: rgba(255, 255, 255, 0.95);
+     backdrop-filter: blur(10px);
+     border-radius: 20px;
+     padding: 24px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+     border: 1px solid rgba(0, 0, 0, 0.08);
+     display: flex;
+     flex-direction: column;
+     gap: 15px;
+     font-family: 'Poppins', sans-serif;
+     transition: all 0.3s ease;
+     z-index: 10;
+
+     h3 {
+         margin: 0;
+         font-size: 20px;
+         color: #333;
+         font-weight: 600;
+         border-bottom: 2px solid #eee;
+         padding-bottom: 8px;
+         text-align: center;
+     }
+
+     .credential-section {
+         background: #f8f9fa;
+         border: 1px solid #e9ecef;
+         border-radius: 12px;
+         padding: 12px 16px;
+         cursor: pointer;
+         transition: all 0.2s ease;
+
+         &:hover {
+             transform: translateY(-2px);
+             background: #fff;
+             border-color: $red;
+             box-shadow: 0 5px 15px rgba(220, 53, 69, 0.1);
+         }
+
+         h4 {
+             margin: 0 0 8px 0;
+             font-size: 15px;
+             color: $reddark;
+             font-weight: 600;
+             display: flex;
+             align-items: center;
+             gap: 8px;
+
+             i {
+                 font-size: 18px;
+                 color: $reddark;
+             }
+         }
+
+         p {
+             margin: 4px 0;
+             font-size: 13.5px;
+             color: #555;
+             display: flex;
+             justify-content: space-between;
+             
+             span {
+                 font-weight: 500;
+                 color: #222;
+             }
+         }
+         
+         .click-hint {
+             margin-top: 8px;
+             font-size: 11px;
+             color: #888;
+             text-align: right;
+             font-style: italic;
+         }
+     }
+ }
+
+ @media screen and (max-width: 1150px) {
+     .auth-container_1 {
+         flex-direction: column;
+         gap: 20px;
+         padding: 20px 10px;
+     }
+     .demo-credentials-card {
+         width: 100%;
+         max-width: 400px;
+     }
+ }
+
+ @media screen and (max-width: 650px) {
+     .demo-credentials-card {
+         display: none;
+     }
  }
